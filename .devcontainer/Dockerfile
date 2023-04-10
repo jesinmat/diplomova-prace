@@ -23,7 +23,8 @@ RUN cd /tmp && wget -qO- https://mirror.ctan.org/systems/texlive/tlnet/install-t
 RUN apt-get install -y --no-install-recommends python3 python3-pip libfontconfig make git && \
     apt-get clean && \
     rm -rf /var/lib/{apt,dpkg,cache,log}/ /tmp/* /var/tmp/* && \
-    pip3 install pygments && ln -f /usr/bin/python3.9 /usr/bin/python
+    pip3 install pygments && ln -f /usr/bin/python3.9 /usr/bin/python && \
+    apt-get install -y default-jre-headless
 
 WORKDIR /tmp/workdir
 

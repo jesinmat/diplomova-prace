@@ -1,5 +1,5 @@
 {
-    "latex-workshop.latex.outDir": "./tmp",
+    "latex-workshop.latex.outDir": ".",
     "latex-workshop.view.pdf.viewer": "tab",
     "latex-workshop.latex.autoBuild.run": "onFileChange",
     "latex-workshop.latex.autoClean.run": "never",
@@ -7,20 +7,27 @@
     "cSpell.language": "en,cs",
     "latex-workshop.latex.build.forceRecipeUsage": false,
     "latex-workshop.latex.tools": [
+        // {
+        //     "name": "latexmk++",
+        //     "command": "latexmk",
+        //     "args": [
+        //         "-xelatex",
+        //         "-shell-escape",
+        //         "-synctex=1",
+        //         "-interaction=nonstopmode",
+        //         "-file-line-error",
+        //         "-pdf",
+        //         "-outdir=%OUTDIR%",
+        //         "%DOC%"
+        //     ],
+        //     "env": {}
+        // },
         {
-            "name": "latexmk++",
-            "command": "latexmk",
+            "name": "arara",
+            "command": "arara",
             "args": [
-                "-xelatex",
-                "-shell-escape",
-                "-synctex=1",
-                "-interaction=nonstopmode",
-                "-file-line-error",
-                "-pdf",
-                "-outdir=%OUTDIR%",
                 "%DOC%"
             ],
-            "env": {}
         },
         {
             "name": "copyPDF",
@@ -34,11 +41,17 @@
     ],
     "latex-workshop.latex.recipe.default": "first",
     "latex-workshop.latex.recipes": [
+        // {
+        //     "name": "latexmk++ ➞ copyPDF",
+        //     "tools": [
+        //         "latexmk++",
+        //         "copyPDF"
+        //     ]
+        // },
         {
-            "name": "latexmk++ ➞ copyPDF",
+            "name": "arara",
             "tools": [
-                "latexmk++",
-                "copyPDF"
+                "arara"
             ]
         }
     ],

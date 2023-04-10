@@ -1,0 +1,58 @@
+% arara: latexmk : {options: ["-xelatex", "-synctex=1", "-shell-escape"]}
+
+% options:
+% thesis=B bachelor's thesis
+% thesis=M master's thesis
+% czech thesis in Czech language
+% english thesis in English language
+% hidelinks remove colour boxes around hyperlinks
+
+\documentclass[thesis=M,czech]{template/FITthesis}[2019/12/23]
+
+\usepackage[utf8]{inputenc}
+
+\usepackage{dirtree}
+
+\newcommand{\tg}{\mathop{\mathrm{tg}}} %cesky tangens
+\newcommand{\cotg}{\mathop{\mathrm{cotg}}} %cesky cotangens
+
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % 
+% ODTUD DAL VSE ZMENTE
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % 
+
+\department{Katedra softwarového inženýrství}
+\title{Návrh a implementace aplikace pro dobrovolnickou brigádu SummerJob}
+\authorGN{Matyáš} %author's given name/names
+\authorFN{Ješina} %author's surname
+\authorWithDegrees{Bc. Matyáš Ješina} %author's name with academic degrees
+\author{Matyáš Ješina} %author's name without academic degrees
+\supervisor{Ing. Marek Jílek}
+\acknowledgements{Děkuji všem a za vše. Nevíte-li, co sem napsat, příkaz odstraňte.}
+\abstractCS{V~několika větách shrňte obsah a přínos této práce v~češtině. Po přečtení abstraktu by měl mít čtenář dost informací pro rozhodnutí, zda chce Vaši práci číst.}
+\abstractEN{Doplňte ekvivalent abstraktu Vaší práce v~angličtině.}
+\placeForDeclarationOfAuthenticity{V~Praze}
+\declarationOfAuthenticityOption{2} %volba Prohlášení
+\keywordsCS{Závěrečná práce, \LaTeX{}.}
+\keywordsEN{Final Thesis, \LaTeX{}.}
+\website{https://github.com/jesinmat/summerjob/} %volitelná URL práce, objeví se v tiráži
+
+
+\begin{document}
+
+\input{chapters/introduction.tex}
+\input{chapters/all.tex}
+\input{chapters/conclusion.tex}
+
+\bibliographystyle{template/csn690}
+\bibliography{mybibliographyfile}
+
+\appendix
+
+\input{chapters/acronyms.tex}
+
+\input{chapters/tutorial.tex}
+
+\input{chapters/cd.tex}
+
+
+\end{document}

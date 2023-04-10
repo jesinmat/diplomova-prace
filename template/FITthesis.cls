@@ -185,7 +185,7 @@
 \newif\if@declarationOptionSelected
 \DeclareRobustCommand{\declarationOfAuthenticityOption}[1]{
 	\ifx1#1 \DeclareRobustCommand{\thedeclarationofauthenticity}{\if\@lang1{%
-		\input{assets/prohlaseni1.tex.txt}
+		\input{prohlaseni1.tex.txt}
 		}\else\if\@lang2{%
 		Prehlasujem, \v ze som predlo\v zen\'u pr\'acu vypracoval(a) samostatne a \v ze som uviedol(uviedla) v\v setky informa\v cn\'e zdroje v~s\'ulade s~Metodick\'ym pokynom o~etickej pr\'iprave vysoko\v skolsk\'ych z\'avere\v cn\'ych pr\'ac.
 
@@ -197,7 +197,7 @@
 		}\fi\fi
 	}\@declarationOptionSelectedtrue\fi
 	\ifx2#1 \DeclareRobustCommand{\thedeclarationofauthenticity}{\if\@lang1{%
-		\input{prohlaseni2.tex.txt}
+		\input{template/prohlaseni2.utf8.txt}
 		}\else\if\@lang2{%
 		Prehlasujem, \v ze som predlo\v zen\'u pr\'acu vypracoval(a) samostatne a \v ze som uviedol(uviedla) v\v setky informa\v cn\'e zdroje v~s\'ulade s~Metodick\'ym pokynom o~etickej pr\'iprave vysoko\v skolsk\'ych z\'avere\v cn\'ych pr\'ac.
 
@@ -222,7 +222,7 @@ sp\^ osobom, ktor\'y nezni\v zuje hodnotu Diela, ale len pre~nez\'arobkov\'e \'u
 		}\fi\fi
 	}\@declarationOptionSelectedtrue\fi
 	\ifx4#1 \DeclareRobustCommand{\thedeclarationofauthenticity}{\if\@lang1{%
-		\input{prohlaseni4.tex.txt}
+		\input{template/prohlaseni4.utf8.txt}
 		}\else\if\@lang2{%
 		Prehlasujem, \v ze som predlo\v zen\'u pr\'acu vypracoval(a) samostatne a \v ze som uviedol(uviedla) v\v setky informa\v cn\'e zdroje v~s\'ulade s~Metodick\'ym pokynom o~etickej pr\'iprave vysoko\v skolsk\'ych z\'avere\v cn\'ych pr\'ac.
 
@@ -271,7 +271,7 @@ sp\^ osobom, ktor\'y nezni\v zuje hodnotu Diela (vr\'atane komer\v cn\'eho vyu\v
 % 	\begin{titlingpage}
 % 		\begin{center}
 % 			\noindent\begin{tabular*}{\textwidth}{m{.77\textwidth}m{.165\textwidth}}
-% 				{\large \if\@lang1{
+% 				{\large\scshape \if\@lang1{
 % 						{\v C}esk{\' e} vysok{\' e} u{\v c}en{\' i} technick{\' e} v~Praze
 % 					}\else\if\@lang2{
 % 						{\v C}esk{\' e} vysok{\' e} u{\v c}en{\' i} technick{\' e} v~Praze
@@ -296,7 +296,7 @@ sp\^ osobom, ktor\'y nezni\v zuje hodnotu Diela (vr\'atane komer\v cn\'eho vyu\v
 % 					\else
 % 						\ClassError{FITthesis}{Department unspecified}{Specify the department using the \department command.}
 % 					\fi
-% 				} & \hfill\includegraphics[width=.16\textwidth]{assets/cvut-logo-bw}
+% 				} & \hfill\includegraphics[width=.16\textwidth]{cvut-logo-bw}
 % 			\end{tabular*}
 % 		\end{center}
 % 		
@@ -340,7 +340,7 @@ sp\^ osobom, ktor\'y nezni\v zuje hodnotu Diela (vr\'atane komer\v cn\'eho vyu\v
 \DeclareRobustCommand{\titlepage}{
         \begin{titlingpage}
         \noindent
-        \if\@lang1{\includegraphics[width=0.5\textwidth]{assets/cvut-logo-bw}}\else\if\@lang2{\includegraphics[width=0.5\textwidth]{assets/cvut-logo-bw}}\else{\includegraphics[width=0.5\textwidth]{assets/cvut-logo-bw-en}}\fi\fi
+        \if\@lang1{\includegraphics[width=0.5\textwidth]{template/cvut-logo-bw}}\else\if\@lang2{\includegraphics[width=0.5\textwidth]{template/cvut-logo-bw}}\else{\includegraphics[width=0.5\textwidth]{cvut-logo-bw-en}}\fi\fi
         
         \vfill
 		
@@ -351,7 +351,7 @@ sp\^ osobom, ktor\'y nezni\v zuje hodnotu Diela (vr\'atane komer\v cn\'eho vyu\v
                \if\thetitle\empty
                        \ClassError{FITthesis}{Thesis' title unspecified}{Specify title of this thesis using the \protect\title\space command.}
                \else
-                       \noindent{\LARGE \begin{flushleft}\thetitle\end{flushleft}}
+                       \noindent\textbf{\LARGE \begin{flushleft}\thetitle\end{flushleft}}
                \fi
 
  
@@ -360,7 +360,7 @@ sp\^ osobom, ktor\'y nezni\v zuje hodnotu Diela (vr\'atane komer\v cn\'eho vyu\v
 
                \if@authorwithdegreesdefined
 
-                       \noindent{\Large \textit{\theauthorwithdegrees}}
+                       \noindent\textbf{\Large \textit{\theauthorwithdegrees}}
 
                \else
 
@@ -508,8 +508,8 @@ sp\^ osobom, ktor\'y nezni\v zuje hodnotu Diela (vr\'atane komer\v cn\'eho vyu\v
 \renewcommand{\counterwithin}{\@ifstar{\@csinstar}{\@csin}}
 
 	\thispagestyle{empty}
-	\includepdf[pages={1-}]{assets/assignment-include.pdf} 
-	
+	\if\@lang1{Sem vlo{\v z}te zad{\' a}n{\' i} Va{\v s}{\' i} pr{\' a}ce.}\else\if\@lang2{Sem vlo{\v z}te zadanie Va{\v s}ej pr{\' a}ce.}\else{Insert here your thesis' task.}\fi\fi
+
 	\frontmatter
 	\pagestyle{plain}
 	\cleardoublepage

@@ -21,6 +21,9 @@
             "editor.formatOnSave": true
           }
         }
-      }
+      },
+      "runArgs": [
+        "--user=rynx"
+      ]
   
 }

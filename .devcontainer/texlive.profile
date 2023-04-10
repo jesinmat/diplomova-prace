@@ -2,7 +2,7 @@
 selected_scheme scheme-full
 
 # Paths.
-TEXDIR /usr/local/texlive
+TEXDIR /usr/share/texlive
 TEXMFCONFIG /.texlive/texmf-config
 TEXMFHOME /.texmf
 TEXMFLOCAL /usr/local/texlive/texmf-local
@@ -15,7 +15,7 @@ binary_x86_64-linux 1
 # See https://mirrors.nic.cz/tex-archive/systems/texlive/tlnet/tlpkg/texlive.tlpdb
 collection-basic 1
 collection-bibtexextra 1
-collection-binextra 0
+collection-binextra 1
 collection-context 0
 collection-fontsextra 0
 collection-fontsrecommended 0
