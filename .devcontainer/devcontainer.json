@@ -22,8 +22,6 @@
           }
         }
       },
-      "runArgs": [
-        "--user=rynx"
-      ]
+      "containerUser": "matyas"
   
 }
