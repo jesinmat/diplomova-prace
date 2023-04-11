@@ -15,7 +15,8 @@ jobs:
       - name: Set up Enviroment
         run: |
           sudo apt install texlive texlive-xetex texlive-extra-utils texlive-lang-czechslovak texlive-bibtex-extra
-          sudo apt install python-pygments
+          sudo apt install -y --no-install-recommends python3 python3-pip
+          pip3 install pygments && ln -f /usr/bin/python3.9 /usr/bin/python
           
       - name: Run Arara
         run: arara DP_Jesina_Matyas_2023.tex
