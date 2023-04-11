@@ -1,0 +1,33 @@
+
+name: Build
+
+on: [push]
+
+jobs:
+  build:
+    name: Build thesis pdf
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Set up Git Repository
+        uses: actions/checkout@v2
+
+      - name: Set up Enviroment
+        run: |
+          sudo apt install texlive texlive-xetex texlive-extra-utils texlive-lang-czechslovak texlive-bibtex-extra
+          sudo apt install python-pygments
+          
+      - name: Run Arara
+        run: arara DP_Jesina_Matyas_2023.tex
+
+      - name: Upload Data as Artifact
+        uses: actions/upload-artifact@master
+        with:
+          name: dp-jesina-matyas-pdf
+          path: ./*.pdf
+
+      - name: Cat Log
+        if: failure()
+        run: |
+          cat main.log
+          ls -la
