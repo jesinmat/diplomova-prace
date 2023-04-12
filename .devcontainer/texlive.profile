@@ -3,12 +3,12 @@ selected_scheme scheme-full
 
 # Paths.
 TEXDIR /usr/share/texlive
-TEXMFCONFIG /.texlive/texmf-config
-TEXMFHOME /.texmf
+TEXMFCONFIG /home/matyas/.texlive/texmf-config
+TEXMFHOME /home/matyas/.texmf
 TEXMFLOCAL /usr/local/texlive/texmf-local
 TEXMFSYSCONFIG /usr/local/texlive/texmf-config
 TEXMFSYSVAR /usr/local/texlive/texmf-var
-TEXMFVAR /.texlive/texmf-var
+TEXMFVAR /home/matyas/.texlive/texmf-var
 binary_x86_64-linux 1
 
 # Collections.

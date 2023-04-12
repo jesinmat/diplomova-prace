@@ -9,6 +9,20 @@ RUN apt-get update -qq && apt-get install -y \
 
 COPY ./texlive.profile /tmp/
 
+ARG USER=matyas
+
+RUN groupadd -g 1000 $USER
+
+RUN adduser \
+   --system \
+   --shell /bin/bash \
+   --gecos $USER \
+   --disabled-password \
+   --home /home/$USER \
+   --gid 1000 \
+   --uid 1000 \
+   $USER
+
 RUN cd /tmp && wget -qO- https://mirror.ctan.org/systems/texlive/tlnet/install-tl-unx.tar.gz | tar xz \
     && /tmp/install-tl*/install-tl -profile /tmp/texlive.profile \
     && tlmgr init-usertree \
@@ -28,19 +42,7 @@ RUN apt-get install -y --no-install-recommends python3 python3-pip libfontconfig
 
 WORKDIR /tmp/workdir
 
-ARG USER=matyas
 
-RUN groupadd -g 1000 $USER
-
-RUN adduser \
-   --system \
-   --shell /bin/bash \
-   --gecos $USER \
-   --disabled-password \
-   --home /home/$USER \
-   --gid 1000 \
-   --uid 1000 \
-   $USER
 
 # Uncomment if running on M1/M2 Mac and comment out the ENV PATH line below
 # ENV PATH="/usr/local/texlive/bin/aarch64-linux:${PATH}"
