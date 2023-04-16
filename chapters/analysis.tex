@@ -1,1 +1,56 @@
-\chapter{Analýza}
+\chapter{Analýza a návrh}
+
+Tato kapitola popisuje proces analýzy požadavků a návrhu systému.
+V první části jsou popsány metody použité při analýze požadavků. V druhé části jsou popsány návrhy systému, které byly vytvořeny na základě analýzy požadavků.
+Analýza je nezávislá na technologiích použitých při následné implementaci.
+
+\section{Analýza požadavků}
+
+Analýza požadavků je proces, který má za cíl získat informace o požadavcích na systém. Na základě opakovaných konzultací s vedoucím práce, Ing. Markem Jílkem, a 
+Bc. Lucií Annou Procházkovou, organizátory akce SummerJob, byly získány podrobné informace o procesu organizace akcí a požadované funkcionalitě nové aplikace.
+Tyto konzultace byly prováděny i dále během vývoje systému, aby bylo zajištěno, že systém bude plnit požadavky organizátorů akce. Pomocí této agilní metody
+bylo možné průběžně reagovat na případné změny a seznamovat budoucí uživatele s aktuálním stavem systému.
+
+V této práci bude kromě obecných pojmů pro jednotlivé součásti systému použita také existující terminologie z akce SummerJob: \textit{pracant} je označení pro brigádníka, \textit{job} je označení pro práci, kterou brigádník vykonává.
+
+\subsection{Funkční požadavky}
+
+Funkční požadavky popisují funkcionalitu požadované aplikace, specifikují možnosti, vlastnosti a operace, které musí být možné provádět.
+Jsou základem při návrhu a implementaci systému.
+
+\begin{itemize}
+    \item \textbf{FP1. Přihlášení a registrace:} uživatelé systému musí být schopni se přihlásit do systému, pokud jsou registrováni v právě probíhajícím ročníku. Registraci není třeba implementovat, probíhá externě a schvalují ji organizátoři akce.
+    \item \textbf{FP2. Správa oprávnění a uživatelských účtů:} uživatelé systému mají různá oprávnění, která určují, co všechno mohou v systému provádět. Oprávnění jsou rozdělena podle přístupu ke správně jednotlivých položek (pracanti, joby, auta, plánování). Administrátor má možnost nastavit oprávnění jednotlivým uživatelům, případně uživateli zcela zakázat přístup do systému.
+    \item \textbf{FP3. Správa pracantů:} organizátoři akce musí být schopni spravovat seznam pracantů. Musí být možné přidávat, mazat a upravovat informace o pracantech. Tyto informace zahrnují jméno a příjmení, e-mail, telefonní číslo, alergie, dostupnost pracanta v jednotlivých dnech akce, informaci, zda a kdy se chce pracant účastnit adorací. Organizátoři sami během akce pracují a patří tedy mezi pracanty.
+    \item \textbf{FP4. Správa jobů:} organizátoři akce musí být schopni spravovat seznam jobů. Musí být možné přidávat, mazat a upravovat informace o jobech. Tyto informace zahrnují název jobu, popis jobu, lokalitu, kontaktní osobu, alergeny na místě, celkový počet pracantů, které je možné přiřadit k jobu, požadovaný počet silných pracantů a počet dní nutných na splnění práce. Jednotlivé joby musí být možné označit jako splněné, případně nežádoucí. Joby musí být také možné označit jako prioritní. Prioritní joby musí být v seznamu jobů odlišeny od ostatních jobů a slouží k zvýšení viditelnosti jobů, které jsou pro organizátory důležité. V jobech musí být možné vyhledávat.
+    \item \textbf{FP5. Správa aut:} organizátoři mohou spravovat dostupná auta. U aut se eviduje počet míst, vlastník (pracant) a najeté kilometry. Na základě najetých kilometrů během akce se po skončení akce počítá kompenzace pro řidiče. Systém by měl umožnit evidenci, zda byla kompenzace vyplacena.
+    \item \textbf{FP6. Správa plánů:} zodpovědné osoby mohou tvořit plány na jednotlivé dny, přidávat joby do plánů, přidávat pracanty do jobů, plánovat dopravu pro jednotlivé joby. Pracanti z různých jobů mohou sdílet dopravu. Systém musí podporovat současnou práci více uživatelů během tvorby plánu. Plány musí být možné zobrazit v tisknutelném formátu.
+    \item \textbf{FP7. Automatický plánovač:} systém musí být schopný na žádost oprávněného uživatele naplánovat rozvrh pracantů na zadané joby. Po přidání jobů do plánu a vyžádání vygenerování plánu plánovač přiřadí pracanty na joby a naplánuje dopravu. Přitom respektuje dostupnost pracantů v daný den, alergie, požadovaný počet silných pracantů na jobu a požadavky na adoraci.
+    \item \textbf{FP8. Správa ročníků:} systém musí být schopný spravovat více ročníků akce SummerJob. Administrátor systému má možnost přepínat mezi jednotlivými ročníky. Každý ročník má název a časové rozpětí.
+    \item \textbf{FP9. Správa oblastí:} systém musí být schopný spravovat oblasti, do kterých jsou joby rozděleny. U oblasti se eviduje nutnost dopravy autem a možnost adorace. Oblasti jsou vztaženy k aktuálnímu ročníku.
+    \item \textbf{FP10. Záznam systémových změn:} systém musí být schopný zaznamenávat změny, které uživatelé provádějí. Záznamy musí obsahovat časové razítko, uživatele, který změnu provedl a popis změny. Administrátor má možnost zobrazit záznamy změn.
+    \item \textbf{FP11. API:} systém poskytuje API, které umožňuje přístup k datům systému. API musí umožňovat provádět operace na úrovni srovnatelné s webovou aplikací.
+\end{itemize}
+
+\subsection{Nefunkční požadavky}
+
+Nefunkční požadavky se týkají výkonu, spolehlivosti, bezpečnosti, škálovatelnosti a dalších aspektů systému. Nepopisují funkce systému, ale zaměřují se na celkovou kvalitu, provozuschopnost a výkonnost.
+
+\begin{itemize}
+    \item \textbf{NP1. Bezpečnost:} systém bude využívat přihlášení a ověření práv uživatelů pro přístup k datům. Uživatel bez potřebného oprávnění nesmí mít přístup datům, pro které je dané oprávnění nezbytné. Výjimkou je přístup k datům potřebným pro vykonávání činností, na které má uživatel oprávnění, například přístup ke jménům pracantů při přidávání nového auta do systému za účelem určení majitele. Přístup k databázi nebude možný přímo z internetu, ale pouze přes webovou aplikaci nebo API. Spojení mezi uživatelem a aplikací musí být šifrované.
+    \item \textbf{NP2. Udržovatelnost a rozšiřitelnost:} výsledná aplikace využívá rozšířené technologie a standardy, které umožňují další rozšíření. K dispozici je dokumentace popisující fungování aplikace a použité technologie. Vývojáři systému mají možnost snadno rozšiřovat aplikaci o nové funkce.
+    \item \textbf{NP3. Nezávislost na platformě:} aplikace nesmí být vázána na konkrétní operační systém. Vývojáři systému mají možnost snadno přenést aplikaci na jinou platformu. Webová aplikace musí být responzivní a použitelná na současných mobilních zařízeních i počítačích.
+    \item \textbf{NP4. Rychlost plánovače:} plánovač musí být schopen vygenerovat plán pro 150 pracantů a 50 jobů do 15 sekund.
+\end{itemize}
+
+\section{Návrh systému}
+
+V této kapitole je popsán návrh systému na základě provedené analýzy. Návrh popisuje celkovou architekturu systému, webovou aplikaci a API, databázi a plánovací systém.
+
+\subsection{Architektura systému}
+
+\subsection{Webová aplikace a API}
+
+\subsection{Databáze}
+
+\subsection{Plánovací systém}
