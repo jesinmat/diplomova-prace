@@ -1,13 +1,69 @@
 \chapter{Rešerše technologií}
 
-V této kapitole je popsán proces výběru vhodných technologií pro implementaci systému. V první části jsou popsány metody použité při výběru technologií. V druhé části jsou popsány vybrané technologie.
+V této kapitole je popsán výběr vhodných technologií pro implementaci systému. Dostupné technologie jsou uvažovány na základě předchozí analýzy.
 
-\section{Webová aplikace}
+\section{Webová aplikace a API}
+
+Webová aplikace bude představovat hlavní rozhraní pro uživatele a společně s API představuje významnou část této práce.
+Je proto nutné zaměřit se na výběr vhodné technologie, která umožní splnění všech zadaných požadavků.
+Vzhledem k požadavkům na současnou práci více uživatelů při tvorbě plánu není možné využít generování statické webové stránky. Pro klientskou část
+aplikace budou proto uvažovány technologie, které umožňují tvorbu dynamických webových aplikací.
+
+Při výběru technologie hrála roli i oblíbenost a žádanost mezi vývojáři. Oblíbený nástroj s širokou komunitou často značí aktivní vývoj, kvalitní dokumentaci
+a podporu. Dále je výhodou možnost využití statického typování, které zajišťuje větší bezpečnost a přehlednost kódu. Podle průzkumu Stack Overflow TODO: zdroj https://survey.stackoverflow.co/2022/\#most-loved-dreaded-and-wanted-webframe-want
+byl v minulém roce nejžádanějším frameworkem pro tvorbu webových aplikací React.js. Tento framework je postaven na jazyce JavaScript a umožňuje tvorbu klientských
+dynamických webových aplikací. Nabízí také možnost využití statického typování pomocí nástroje TypeScript.
+
+Mezi nejoblíbenějšími technologiemi s více než 1 000 hlasy se umístily také nástroje Svelte, ASP.NET Core a Next.js. Všechny zmíněné technologie umožňují tvorbu dynamických webových aplikací,
+klientskou i serverovou část, nabízejí detailní dokumentaci a jsou aktivně vyvíjeny. Podporují také statické typování, částečné generování webových stránek na serveru (\textit{SSR} -- server side rendering),
+oddělené serverové částí s podporou přístupu k databázi i tvorbu API.
+
+Pro implementaci byl zvolen framework Next.js ve verzi 13. Tento framework je postaven na React.js a rozšiřuje jej o další funkce, například tvorbu API nebo pokročilejší nastavení serveru.
+V době psaní práce podporuje React 18 SSR pouze v beta verzi, Next.js proto nabízí ve výchozím nastavení původní generování webových stránek u klienta.
+Během implementace však bude tato funkcionalita využita, protože přináší výhody v rychlosti načítání stránky, možnosti kešování a spouštění kódu na serveru.
+
+Pro přístup k databázi byl zvolen nástroj Prisma. Prisma umožňuje definovat schéma databáze v jednoduché textové podobě a pomocí automatického generování
+příslušných typů pro TypeScript zajišťuje bezpečný přístup k databázi. Díky tomu je možné využít statické typování i při práci s databází a není možné vytvořit
+neplatný dotaz. Prisma také umožňuje tvorbu migrací, které zajišťují bezpečnou změnu schématu databáze. 
 
 \section{Plánovací systém}
 
+Plánovací systém bude vytvořen v jazyce TypeScript s využitím nástroje Prisma. To umožní minimalizovat počet použitých technologií napříč projektem,
+což zjednoduší jeho správu a údržbu. Vzhledem k počtu prací a brigádníků bude možné provést plánování do několika sekund, aby bylo zajištěno splnění požadavku na rychlost.
+Plánovač bude vytvořen jako samostatná komponenta, kterou bude možné v případě potřeby upravit přidáním vlastní implementace v jazyce TypeScript
+či zcela nahradit jinou implementací. 
+Pro přenos požadavků mezi webovým serverem a plánovacím systémem bude využita fronta zpráv.
+
+\section{Fronta zpráv}
+
+Fronta zpráv je datová struktura, která umožňuje asynchronní přenos zpráv mezi jednotlivými komponentami systému. Zprávy jsou ukládány do fronty
+a následně zpracovány. V případě chyby je možné zprávu zpracovat znovu. Fronta zpráv je vhodným řešením pro přenos zpráv mezi webovým serverem a plánovacím systémem,
+protože zajišťuje spolehlivý přenos zpráv v případě, že jedna ze služeb není v danou chvíli krátkodobě dostupná.
+
+Službou pro poskytování fronty zpráv byla zvolena technologie RabbitMQ. Jedná se o open-source nástroj, který je dostupný zdarma. RabbitMQ je běžně používaným řešením
+pro fronty zpráv. Využívá otevřený standard AMQP, jehož implementace je pro mnoho jazyků, včetně TypeScriptu, dostupná zdarma. TODO: zdroj "https://www.rabbitmq.com/tutorials/tutorial-one-javascript.html".
+
+
 \section{Databáze}
 
-\section{API}
+Pro výběr databáze byla na základě struktury dat zvolena technologie relačních databází. Uložená data mají pevně danou neměnnou strukturu,
+jedná se o krátké textové řetězce, čísla a datum. Výhodou relačních databází je možnost snadno definovat vztahy mezi jednotlivými tabulkami,
+což je v případě plánovacího systému nezbytné. Dále je výhodou možnost využití transakcí, které zajišťují konzistenci dat.
+Na základě analýzy a interních zkušeností administrátorského týmu akce SummerJob byl zvolen databázový systém PostgreSQL. Tento systém je
+dostupný zdarma, má otevřený zdrojový kód a jedná se o běžně používané řešení s historií dlouhou více než 35 let. TODO: zdroj "https://www.postgresql.org/about/".
+Podle uživatelského průzkumu Stack Overflow se v minulém roce jednalo o nejoblíbenější a nejžádanější databázový systém. TODO: zdroj  https://survey.stackoverflow.co/2022/\#section-most-loved-dreaded-and-wanted-databases
 
-\section{Výběr technologií}
+Objem dat a počet současných uživatelů systému je relativně malý, proto není nutné využívat technologie pro škálování databáze. Zálohování a obnova dat
+je možná přes externí nástroje, které jsou také dostupné zdarma. Jedná se například o aplikaci pgAdmin, která umožňuje správu databáze přes grafické rozhraní.
+Prisma poskytuje podporu pro PostgreSQL verze 9.4 a vyšší.
+
+\section{Kontejnerizace}
+
+Pro zajištění přenositelnosti a nezávislosti na platformě podle požadavku NF3 budou všechny komponenty systému spouštěny v kontejnerech. TODO: zdroj "https://www.ibm.com/topics/containers".
+Kontejnerizace je technologie, která umožňuje spouštět aplikace v izolovaném prostředí. Aplikace spuštěná v kontejneru je izolována od ostatních aplikací,
+které jsou spuštěny na hostitelském operačním systému nebo v jiných kontejnerech. Kontejnery obsahují
+všechny potřebné závislosti, které jsou nutné pro spuštění aplikace. Díky tomu je možné aplikaci spustit na libovolném operačním systému, který podporuje kontejnerizaci.
+
+Pro kontejnerizaci byla zvolena technologie Docker. Jedná se o open-source nástroj, který je dostupný zdarma pro všechny běžné operační systémy.
+V roce 2022 se jednalo o nejpoužívanější technologii pro kontejnerizaci. TODO: zdroj "https://www.statista.com/statistics/1256245/containerization-technologies-software-market-share/".
+

@@ -101,7 +101,7 @@ Databáze bude sloužit jako hlavní úložiště dat systému pro všechny pot�
 Databáze bude uchovávat data o rozsahu několika stovek záznamů pro každý ročník. Běžné databázové systémy jsou schopny zpracovat takové množství dat, a tak není potřeba
 klást na výběr databáze žádné specifické požadavky.
 
-Na základě požadavků na aplikaci bylo vytvořeno konceptuální schéma, které je na obrázku \ref{fig:schema}. Schéma zobrazuje vztahy mezi jednotlivými entitami a jejich atributy.
+Na základě požadavků na aplikaci bylo vytvořeno konceptuální schéma, které je možné vidět na obrázku \ref{fig:schema}. Schéma zobrazuje vztahy mezi jednotlivými entitami a jejich atributy.
 Schéma neobsahuje entity a atributy pro přihlašování do aplikace, protože tyto údaje budou v databázi uloženy pomocí zvolené knihovny.
 
 \begin{figure}[h]
@@ -131,4 +131,4 @@ Plánovací systém tvoří plány podle následujících kritérií:
     \item \textbf{Zachování naplánovaných prací:} pokud jsou před začátkem automatického plánování někteří brigádníci již přiřazeni k práci, musí být jejich přiřazení zachováno. Plánovací systém nesmí odebírat přiřazené brigádníky z práce, z naplánované dopravy atd. Může však přidávat nové brigádníky k práci nebo stávajícím pracantům přiřazovat dopravu, pokud není doprava již přiřazena.
 \end{itemize}
 
-Po vygenerování může být plán upraven organizátory pomocí webové aplikace. 
+Po vygenerování může být plán upraven organizátory pomocí webové aplikace. Do vygenerovaného plánu musí být možné přidat další práce a vyžádat nové plánování.
