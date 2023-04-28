@@ -1,3 +1,56 @@
 \chapter{Uvedení do provozu}
 
-nasazení aplikace, návod
+Po ukončení testování byla aplikace uvedena do provozu na přelomu května a června 2023 a bude využita
+pro nadcházející ročník akce SummerJob. Tato kapitola popisuje
+technické řešení nasazení aplikace na produkční server a popis spuštění.
+
+\section{Zvolené řešení}
+
+V současné době je původní webová komponenta s databází provozována na domácím serveru,
+který je připojen k internetu pomocí pevné IP adresy. Tento server je však již zastaralý a
+nedostačující pro provoz nové aplikace. Proto bylo rozhodnuto o spuštění nové aplikace na
+externím serveru. Pro tento účel byl vybrán server poskytovatele Hukot.net\footnote{\url{https://www.hukot.net/}}
+v konfiguraci \textit{VPS-L02G} s operačním systémem Ubuntu Server 22.04 LTS. Tento server
+poskytuje 2 GB operační paměti, 20 GB úložiště a jedno vlákno procesoru s možností přechodu
+na vyšší konfiguraci v případě potřeby. Server je připojen k internetu pomocí pevné IP adresy.
+
+Aplikace je nasazena na serveru pomocí Docker kontejnerů. To umožňuje snadné nasazení aplikace
+na jiném serveru v případě potřeby. V případě selhání některého z kontejnerů dojde k automatickému
+restartu kontejneru, což zajišťuje dostupnost i v případě neočekávané chyby.
+
+Pro propojení aplikace s doménou \url{www.summerjob.eu} byl využit DNS záznam typu A pro subdoménu
+\texttt{jobplanner.summerjob.eu}, který směřuje na IP adresu serveru. Na serveru byl následně
+nastaven kontejner SWAG TODO: zdroj , který obsahuje nástroje pro bezpečný provoz webových aplikací.
+Hlavní komponentou kontejneru je webový server Nginx v režimu reverzní proxy, který předává veškeré požadavky na subdoménu
+\\href{https://jobplanner.summerjob.eu}{jobplanner.summerjob.eu} na kontejner s aplikací. Reverzní proxy je spuštěna v kontejneru
+společně s nástrojem \texttt{certbot}, který zajišťuje automatické obnovování SSL certifikátů pro subdoménu
+pomocí certifikační autority Let's Encrypt. Veškerá komunikace s aplikací je tedy šifrována, požadavky na
+nešifrované spojení jsou automaticky přesměrovány. 
+
+\section{Proces nasazení}
+
+Pro nasazení aplikace na produkční server byl využit nástroj \texttt{docker-compose}, který
+umožňuje spouštět a spravovat skupiny kontejnerů pomocí jednotného konfiguračního souboru.
+Konfigurace je zapsána v souboru \texttt{docker-compose.yaml}, který je součástí repozitáře aplikace.
+Tento soubor obsahuje konfiguraci pro kontejnery s aplikací, databází a webovým serverem, kterou 
+je před spuštěním nutné upravit podle návodu, který je součástí repozitáře.
+
+Jedná se zejména o nastavení databáze a přístupových údajů pro e-mailový účet, který je využíván
+pro odesílání přihlašovacích e-mailů. Po spuštění kontejnerů je provedena inicializace databáze
+a vytvoření uživatelského účtu s administrátorskými právy pomocí jednorázového
+inicializačního kontejneru.
+
+\section{Zálohování}
+
+K zálohování databáze je možné využít standardní nástroje pro zálohování databáze PostgreSQL.
+Vhodným řešením je například aplikace pgAdmin\footnote{\url{https://www.pgadmin.org/}}, kterou
+je možné spustit v kontejneru propojeném se sítí databáze.
+Ve výchozím nastavení není databáze automaticky zálohována.
+
+\section{Škálování}
+
+ Aplikaci bude využívat
+pravidelně zejména organizační tým akce, který se skládá přibližně z 25 členů. Z analýzy počtu dobrovolníků v předchozích ročnících akce SummerJob vyplývá, že
+se ročníku účastní průměrně 150 dobrovolníků. Tito dobrovolníci budou aplikaci využívat jednorázově na nastavení údajů a kontrolu plánu.
+Vzhledem k počtu uživatelů a jejich aktivitám není nutné řešit automatické škálování aplikace. Pokud by však bylo nezbytné
+zvýšit výkon aplikace, je možné navýšit hardwarové prostředky serveru přechodem na vyšší konfiguraci.
