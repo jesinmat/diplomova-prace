@@ -16,8 +16,8 @@
 \usepackage{hyperref}
 \usepackage{pdfpages}
 
-\newcommand{\tg}{\mathop{\mathrm{tg}}} %cesky tangens
-\newcommand{\cotg}{\mathop{\mathrm{cotg}}} %cesky cotangens
+\usepackage[style=iso-numeric,backend=biber]{biblatex}
+\addbibresource{mybibliographyfile.bib}
 
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % 
 % ODTUD DAL VSE ZMENTE
@@ -52,8 +52,9 @@
 \input{chapters/production.tex}
 \input{chapters/conclusion.tex}
 
-\bibliographystyle{template/csn690}
-\bibliography{mybibliographyfile}
+% \bibliographystyle{template/csn690}
+% \bibliography{mybibliographyfile}
+\printbibliography
 
 \appendix
 

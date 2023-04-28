@@ -104,7 +104,7 @@ klást na výběr databáze žádné specifické požadavky.
 Na základě požadavků na aplikaci bylo vytvořeno konceptuální schéma, které je možné vidět na obrázku \ref{fig:schema}. Schéma zobrazuje vztahy mezi jednotlivými entitami a jejich atributy.
 Schéma neobsahuje entity a atributy pro přihlašování do aplikace, protože tyto údaje budou v databázi uloženy pomocí zvolené knihovny.
 
-\begin{figure}[h]
+\begin{figure}[ht]
     \centering
     \includegraphics[width=\textwidth]{chapters/images/schema}
     \caption{Konceptuální schéma}
@@ -132,3 +132,30 @@ Plánovací systém tvoří plány podle následujících kritérií:
 \end{itemize}
 
 Po vygenerování může být plán upraven organizátory pomocí webové aplikace. Do vygenerovaného plánu musí být možné přidat další práce a vyžádat nové plánování.
+
+\subsection{Grafický design}
+
+Grafický design webové aplikace by měl rozšiřovat vizuální styl již existujících webových stránek SummerJob. Jedná se zejména o žluté barevné prvky, bezpatkový text nebo
+logo SummerJob. Webová aplikace by měla být přehledná a intuitivní.
+
+Před zahájením vývoje byl dodán základní grafický návrh aplikace, který zobrazuje vybrané prvky a stránky aplikace.
+Dodaný grafický návrh neslouží jako přesný návrh vzhledu aplikace, ale jako inspirace pro vývojáře. Ukázka z dodaného návrhu je k dispozici na obrázku \ref{fig:design}.
+
+Na základě dodaného návrhu byl vypracován detailnější grafický návrh vybraných částí aplikace, který byl před zahájením vývoje schválen organizátory.
+Tento návrh byl vytvořen pomocí nástroje Bootstrap Studio, který umožňuje vytvářet grafické návrhy webových stránek pomocí interaktivního
+upravování předpřipravených komponent a export návrhu do HTML a CSS.
+Ukázka je k dispozici na obrázku \ref{fig:design-detail}. Vývoj vycházel z tohoto návrhu, který byl v průběhu implementace dále upravován podle potřeb organizátorů.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth]{chapters/images/graficky-navrh}
+    \caption{Dodaný grafický návrh webové aplikace}
+    \label{fig:design}
+\end{figure}
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth]{chapters/images/bootstrap-studio}
+    \caption{Vytvořený grafický návrh webové aplikace}
+    \label{fig:design-detail}
+\end{figure}
