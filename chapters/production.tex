@@ -9,7 +9,7 @@ technické řešení nasazení aplikace na produkční server a popis spuštěn�
 V současné době je původní webová komponenta s databází provozována na domácím serveru,
 který je připojen k internetu pomocí pevné IP adresy. Tento server je však již zastaralý a
 nedostačující pro provoz nové aplikace. Proto bylo rozhodnuto o spuštění nové aplikace na
-externím serveru. Pro tento účel byl vybrán server poskytovatele Hukot.net\footnote{\url{https://www.hukot.net/}}
+externím serveru. Pro tento účel byl vybrán server poskytovatele Hukot.net\footnote{Hukot.net, \url{https://www.hukot.net/}}
 v konfiguraci \textit{VPS-L02G} s operačním systémem Ubuntu Server 22.04 LTS. Tento server
 poskytuje 2 GB operační paměti, 20 GB úložiště a jedno vlákno procesoru s možností přechodu
 na vyšší konfiguraci v případě potřeby. Server je připojen k internetu pomocí pevné IP adresy.
@@ -20,9 +20,9 @@ restartu kontejneru, což zajišťuje dostupnost i v případě neočekávané c
 
 Pro propojení aplikace s doménou \url{www.summerjob.eu} byl využit DNS záznam typu A pro subdoménu
 \texttt{jobplanner.summerjob.eu}, který směřuje na IP adresu serveru. Na serveru byl následně
-nastaven kontejner SWAG TODO: zdroj , který obsahuje nástroje pro bezpečný provoz webových aplikací.
+nastaven kontejner SWAG\footnote{Secure Web Application Gateway, \url{https://docs.linuxserver.io/general/swag}}, který obsahuje nástroje pro bezpečný provoz webových aplikací.
 Hlavní komponentou kontejneru je webový server Nginx v režimu reverzní proxy, který předává veškeré požadavky na subdoménu
-\\href{https://jobplanner.summerjob.eu}{jobplanner.summerjob.eu} na kontejner s aplikací. Reverzní proxy je spuštěna v kontejneru
+\href{https://jobplanner.summerjob.eu}{jobplanner.summerjob.eu} na kontejner s aplikací. Reverzní proxy je spuštěna v kontejneru
 společně s nástrojem \texttt{certbot}, který zajišťuje automatické obnovování SSL certifikátů pro subdoménu
 pomocí certifikační autority Let's Encrypt. Veškerá komunikace s aplikací je tedy šifrována, požadavky na
 nešifrované spojení jsou automaticky přesměrovány. 
@@ -36,9 +36,18 @@ Tento soubor obsahuje konfiguraci pro kontejnery s aplikací, databází a webov
 je před spuštěním nutné upravit podle návodu, který je součástí repozitáře.
 
 Jedná se zejména o nastavení databáze a přístupových údajů pro e-mailový účet, který je využíván
-pro odesílání přihlašovacích e-mailů. Po spuštění kontejnerů je provedena inicializace databáze
-a vytvoření uživatelského účtu s administrátorskými právy pomocí jednorázového
-inicializačního kontejneru.
+pro odesílání přihlašovacích e-mailů. Celý proces včetně příkazů a popisu proměnných prostředí je popsán
+v repozitáři aplikace v souboru \texttt{README.md}.
+
+\section{Inicializace databáze}
+
+Po spuštění kontejnerů je nutné provést inicializaci databáze
+a vytvoření uživatelského účtu s administrátorskými právy. K tomuto účelu byl vytvořen inicializační kontejner, který
+obsahuje skripty potřebné pro inicializaci a správu databáze. Kontejner obsahuje skripty pro vytvoření potřebných tabulek v databázi,
+přidání prvního administrátorského účtu, nainstalovaný nástroj Prisma CLI a další.
+
+Jedná se o servisní kontejner určený pro jednorázové interaktivní spuštění. Kontejner umožňuje také přístup k databázi
+pomocí nástroje Prisma Studio, který umožňuje správu dat v databázi pomocí webového rozhraní. 
 
 \section{Zálohování}
 

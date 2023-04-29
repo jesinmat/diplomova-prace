@@ -15,6 +15,10 @@ v původním návrhu specifikovány.
 
 Pro zajištění správné funkcionality API byly vytvořeny automatizované testy. Tyto testy ověřují, že API vrací očekávaná data a že nedochází k chybám při zpracování požadavků.
 Testy byly vytvořeny pomocí knihoven Chai a Mocha, rozšířené o knihovnu supertest pro testování HTTP požadavků.
+Mocha je rozšířeným nástrojem pro testování JavaScriptových aplikací, který umožňuje vytvářet testovací sady a testy. Podporuje asynchronní testování a umožňuje
+kombinovat různé styly zápisu testů. Chai nabízí více možností zápisu validace dat, v testech je využit styl BDD. Tento styl umožňuje používat přirozený jazyk
+pro popis testů, což zvyšuje čitelnost testů. Supertest je knihovna, která umožňuje testovat HTTP požadavky. V testech je využívána pro odesílání požadavků na API.
+
 Vzhledem k použité metodě přihlašování není možné automaticky generovat přístupový token, na začátku testů je tedy v databázi automaticky
 vytvořen uživatel s administrátorským účtem a do tabulky aktivních přihlášení je vložen uměle vytvořený token. 
 
@@ -24,9 +28,12 @@ pomocí API testů snadno otestovat. Pro kontrolu jednotlivých API endpointů j
 
 \subsection{Ukázka testů}
 
-TODO: popsat chai, mocha, supertest, cookies
+Test v ukázce \ref{code:api-test} ověřuje funkčnost požadavku na odstranění plánu.
+Nejprve je vytvořen plán, následně je získán seznam všech plánů po odstranění plánu je získán seznam plánů znovu a je ověřeno, že plán byl odstraněn.
+Testy využívají asynchronní zápis pomocí klíčového slova \texttt{async} a \texttt{await}, které umožňuje zapisovat asynchronní kód jako synchronní bez zanořování.
 
 
+\begin{listing}[h]
 \begin{minted}[linenos]{javascript}
 describe("Plans", function () {
   it("deletes a plan", async function () {
@@ -53,3 +60,6 @@ describe("Plans", function () {
   });
 });
 \end{minted}
+\caption{Test API pro odstranění plánu}
+\label{code:api-test}
+\end{listing}

@@ -41,7 +41,7 @@ a následně zpracovány. V případě chyby je možné zprávu zpracovat znovu.
 protože zajišťuje spolehlivý přenos zpráv v případě, že jedna ze služeb není v danou chvíli krátkodobě dostupná.
 
 Službou pro poskytování fronty zpráv byla zvolena technologie RabbitMQ. Jedná se o open-source nástroj, který je dostupný zdarma. RabbitMQ je běžně používaným řešením
-pro fronty zpráv. Využívá otevřený standard AMQP, jehož implementace je pro mnoho jazyků, včetně TypeScriptu, dostupná zdarma. TODO: zdroj "https://www.rabbitmq.com/tutorials/tutorial-one-javascript.html".
+pro fronty zpráv. Využívá otevřený standard AMQP, jehož implementace je pro mnoho jazyků, včetně TypeScriptu, dostupná zdarma \cite{rabbitmq}.
 
 
 \section{Databáze}
@@ -50,8 +50,8 @@ Pro výběr databáze byla na základě struktury dat zvolena technologie relač
 jedná se o krátké textové řetězce, čísla a datum. Výhodou relačních databází je možnost snadno definovat vztahy mezi jednotlivými tabulkami,
 což je v případě plánovacího systému nezbytné. Dále je výhodou možnost využití transakcí, které zajišťují konzistenci dat.
 Na základě analýzy a interních zkušeností administrátorského týmu akce SummerJob byl zvolen databázový systém PostgreSQL. Tento systém je
-dostupný zdarma, má otevřený zdrojový kód a jedná se o běžně používané řešení s historií dlouhou více než 35 let. TODO: zdroj "https://www.postgresql.org/about/".
-Podle uživatelského průzkumu Stack Overflow se v minulém roce jednalo o nejoblíbenější a nejžádanější databázový systém. TODO: zdroj  https://survey.stackoverflow.co/2022/\#section-most-loved-dreaded-and-wanted-databases
+dostupný zdarma, má otevřený zdrojový kód a jedná se o běžně používané řešení s historií dlouhou více než 35 let \cite{postgresql}.
+Podle uživatelského průzkumu Stack Overflow se v minulém roce jednalo o nejoblíbenější a nejžádanější databázový systém \cite{so_dev_survey_db}.
 
 Objem dat a počet současných uživatelů systému je relativně malý, proto není nutné využívat technologie pro škálování databáze. Zálohování a obnova dat
 je možná přes externí nástroje, které jsou také dostupné zdarma. Jedná se například o aplikaci pgAdmin, která umožňuje správu databáze přes grafické rozhraní.
@@ -59,11 +59,11 @@ Prisma poskytuje podporu pro PostgreSQL verze 9.4 a vyšší.
 
 \section{Kontejnerizace}
 
-Pro zajištění přenositelnosti a nezávislosti na platformě podle požadavku NF3 budou všechny komponenty systému spouštěny v kontejnerech. TODO: zdroj "https://www.ibm.com/topics/containers".
+Pro zajištění přenositelnosti a nezávislosti na platformě podle požadavku NF3 budou všechny komponenty systému spouštěny v kontejnerech \cite{what_is_container}.
 Kontejnerizace je technologie, která umožňuje spouštět aplikace v izolovaném prostředí. Aplikace spuštěná v kontejneru je izolována od ostatních aplikací,
 které jsou spuštěny na hostitelském operačním systému nebo v jiných kontejnerech. Kontejnery obsahují
 všechny potřebné závislosti, které jsou nutné pro spuštění aplikace. Díky tomu je možné aplikaci spustit na libovolném operačním systému, který podporuje kontejnerizaci.
 
 Pro kontejnerizaci byla zvolena technologie Docker. Jedná se o open-source nástroj, který je dostupný zdarma pro všechny běžné operační systémy.
-V roce 2022 se jednalo o nejpoužívanější technologii pro kontejnerizaci. TODO: zdroj "https://www.statista.com/statistics/1256245/containerization-technologies-software-market-share/".
+V roce 2022 se jednalo o nejpoužívanější technologii pro kontejnerizaci \cite{docker_survey}.
 
