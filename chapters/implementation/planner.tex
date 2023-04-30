@@ -1,4 +1,5 @@
 \section{Automatický plánovač}
+\label{sec:planner}
 
 Automatický plánovací systém je implementován jako samostatná aplikace, která podle příchozích požadavků na plánování vytváří
 plány. Tyto požadavky přijímá pomocí fronty zpráv RabbitMQ. Plánovač je implementován v jazyce TypeScript a běží v prostředí Node.js.
@@ -30,11 +31,20 @@ Plánovač vytváří jeden plán na základě požadavků z analýzy v následu
 V krocích, kdy dochází k přiřazování pracantů, jsou vybírání pouze pracanti, kteří nejsou alergičtí na alergeny vyskytující se na místě.
 V průběhu přiřazování plánovací systém eviduje, zda je v dané oblasti možné adorovat, a pokud ano, snaží se přiřadit pracanta, který projevil zájem o adoraci.
 Pokud v oblasti adorovat není možné, přiřazují se pracanti, kteří nevyjádřili zájem o adoraci.
-Podmínka na adoraci je jediná podmínka, kterou plánovač může porušit -- v některých případech není v oblasti adorace dostatek pracovních míst.
-Vždy jsou však dodrženy podmínky na alergeny a kapacitu auta.
+V některých případech není možné vytvořit bezchybný plán -- například není v oblasti adorace dostatek pracovních míst, není dostatek řidičů nebo pracantů na zaplnění
+minimálních kapacit všech jobů. V takovém případě plánovač tvoří plán, který je co nejblíže požadovaným kritériím.
+Diagram prvního kroku plánovače je zobrazen na obrázku \ref{fig:planner-diagram}.
 
-Toto řešení je výrazně efektivnější než původní řešení, protože plánovač vytváří pouze jeden plán, který splňuje všechna kritéria.
+Toto řešení je výrazně efektivnější než původní řešení, protože plánovač vytváří pouze jeden plán, který v optimálním případě splňuje všechna kritéria.
 Během experimentálního testování byl čas potřebný k naplánování úlohy pro obvyklý počet pracantů a jobů v řádu jednotek sekund.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.9\textwidth]{chapters/images/planner-diagram.pdf}
+    \caption{Diagram prvního kroku plánovače pro jednu práci}
+    \label{fig:planner-diagram}
+\end{figure}
+
 
 \subsection{Možnosti rozšíření}
 

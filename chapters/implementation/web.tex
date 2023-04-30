@@ -60,84 +60,32 @@ Oprávnění byla rozdělena do následujících skupin:
     \item \textbf{Práce:} oprávnění \textit{Práce} umožňuje přidávat, upravovat a mazat navrhované práce. Toto oprávnění neumožňuje měnit naplánované práce.
 \end{itemize}
 
-\subsection{Přístup k databázi}
+\subsection{Získávání dat}
 
-Přístup k databázi je implementován pomocí knihovny Prisma. Prisma je moderní, rychle se rozvíjející ORM framework pro práci s různými typy databází. 
-Zakládá si na snadné integraci s jazykem TypeScript, díky kterému umožňuje pracovat s daty v databázích bezpečně. Podporuje také Javascript.
+Data jsou získávána pomocí API, které je popsáno v samostatné kapitole. Pro komunikaci s API byla využita knihovna \texttt{SWR} od vývojářů Next.js, která
+rozšiřuje funkce standardní knihovny \texttt{fetch} a je vhodná pro použití v React aplikacích. Knihovna je založena na principu \textit{stale-while-revalidate},
+který zajišťuje plynulou aktualizaci dat. Při prvním načtení dat je zobrazena poslední stažená verze a následně jsou data aktualizována na pozadí. Tento přístup
+umožňuje rychlé zobrazení dat i v případě pomalého připojení, pokud jsou data již stažena a uložena v prohlížeči. Lze nastavit automatickou aktualizaci dat 
+v pravidelných intervalech, což je využito například při zobrazení aktuálního stavu plánů. Ve výchozím nastavení nestahuje data, pokud daná karta prohlížeče není
+aktivní, což šetří přenosové pásmo a zdroje serveru. Umožňuje také deduplikovat data, pokud je více požadavků na stejnou URL.
 
-Jedná se o poměrně nový produkt -- první verze byla zveřejněna v roce 2019. 
-Díky rozsáhlé komunitě a otevřenému zdrojovému kódu však dochází k neustálému zlepšování.
-V současné době jeho popularita rychle roste a podle statistik webu npmjs.com dosahuje přibližně 870 000 stažení týdně (na začátku roku 2022 to bylo 200 000). TODO: zdroj
+Pokud dojde k chybě při získávání dat, SWR se pokusí požadavek zopakovat. Během této doby jsou zobrazena data z cache, pokud jsou k dispozici. Tento způsob
+umožňuje zobrazovat data i při přerušení připojení k internetu. Po obnovení spojení dojde k automatické aktualizaci dat a zobrazení nových hodnot.
 
-Prisma umožňuje spravovat databázi pomocí tzv. datového modelu (schématu), který je definován v souboru \texttt{schema.prisma}. 
-Schéma je možné navrhnout manuálně, pokud databáze neexistuje, případně vygenerovat z existující databáze. Schéma se skládá z entit a jejich atributů a vztahů mezi nimi.
-Výňatek ze souboru je k dispozici ve výpisu \ref{fig:prisma-model}.
+Knihovna umožňuje provádět i jednorázové požadavky, které nejsou ukládány do cache. Tento přístup se využívá pro vytváření, úpravu a mazání dat, kdy není vhodné
+opakovat požadavky na server.
 
-\begin{listing}[h]
-\begin{minted}{js}
-datasource db {
-    provider = "postgresql"
-    url      = env("DATABASE_URL")
-}
+Pro zrychlení načítání dat aplikace využívá předání serializovaných dat přímo ze serveru během server side renderingu. Tento přístup je využit například při
+zobrazení seznamu prací -- data jsou na serveru získána z databáze, serializována, předána do React aplikace a odeslána klientovi.
+Data jsou v prohlížeči deserializována a zobrazena, následně jsou aktualizována pomocí SWR na pozadí. Tento přístup umožňuje zobrazit data okamžitě, aniž by
+uživatel musel čekat na jejich stažení. Nedochází tak například k zobrazení prázdné tabulky a následnému překreslení po stažení dat.
 
-model Ride {
-  id         String    @id @default(uuid())
-  driver     Worker    @relation("Driver",
-                        fields: [driverId],
-                        references: [id],
-                        onDelete: Cascade)
-  driverId   String
-  car        Car       @relation(fields: [carId], 
-                        references: [id],
-                        onDelete: Cascade)
-  carId      String
-  passengers Worker[]
-  job        ActiveJob @relation(fields: [jobId], 
-                        references: [id],
-                        onDelete: Cascade)
-  jobId      String
-}
-\end{minted}
-\caption{Ukázka datového modelu Prisma}
-\label{fig:prisma-model}
-\end{listing}
+\subsection{Rozvržení aplikace}
 
-Po definici schématu je možné vygenerovat příslušné typy a funkce pro jazyk TypeScript, které umožňují snadnou práci s databází.
-Typy pro všechny dostupné operace jsou vytvořeny tak, aby odpovídaly datovému modelu a nebylo možné vytvořit nevalidní dotaz.
-Během dotazování je možné využívat vazby mezi entitami a číst či měnit hodnoty atributů ve více tabulkách najednou.
-Ukázka použití v aplikaci je na obrázku \ref{fig:prisma-query}.
+Klientská část webové aplikace je rozdělena do několika částí, které jsou popsány níže. Každá část je zobrazena v samostatné záložce, která je přístupná
+pouze s odpovídajícím oprávněním. Všechny záložky jsou dostupné z hlavního menu, které je zobrazeno v horní části obrazovky.
 
-\begin{listing}[h]
-\begin{minted}{js}
-const prisma = new PrismaClient();
-
-async function getRidesOfDriver(driverId: string) {
-    return await prisma.ride.findMany({
-        where: {    
-            driver: {
-                id: driverId,
-            },
-        },
-        include: {
-            driver: true,
-            car: true,
-            passengers: true,
-            job: true,
-        },
-    });
-}
-\end{minted}
-\caption{Ukázka použití Prisma ORM}
-\label{fig:prisma-query}
-\end{listing}
-
-
-
-
-
-Klientská část webové aplikace je rozdělena do několika částí, které jsou popsány níže.
-
-\subsection{Pracanti}
+\subsubsection{Pracanti}
 
 Záložka \textit{Pracanti} obsahuje seznam registrovaných brigádníků. Seznam je zobrazen v tabulce, která umožňuje vyhledávání a filtrování dat.
 Jsou zde zobrazeni pouze brigádníci, kteří jsou registrovaní v aktuálním ročníku akce. U každého brigádníka je zobrazeno jméno, e-mail, telefonní číslo,
@@ -157,20 +105,23 @@ k dispozici náhled importovaných dat.
 Na žádost organizátorů byla do aplikace přidána možnost tisku seznamu brigádníků v jednoduché tabulce. Tato funkce je dostupná v záložce \textit{Pracanti} po kliknutí
 na tlačítko \textit{Tisknout}.
 
-\subsection{Joby}
+\subsubsection{Joby}
 
 V záložce \textit{Joby} jsou zobrazeny všechny práce, které je možné vykonat během akce. U každé práce je evidován název, popis, minimální
 a maximální počet brigádníků, kteří mohou danou práci vykonávat současně, a počet silných brigádníků, kteří jsou pro práci potřeba. Dále jsou evidovány
 informace o lokalitě, kde se práce bude vykonávat, včetně přesné adresy, kontakt na zadavatele, počet dnů potřebných pro vykonání práce, 
 seznam dní, kdy je možné práci vykonávat, a alergeny v místě pracoviště. Evidence alergenů umožní automatickému plánovači i organizátorům přiřadit na práci brigádníky, kteří nemají
-konfliktní alergie s alergeny na pracovišti. 
+konfliktní alergie s alergeny na pracovišti. Data obsahují také údaj, zda je v místě práce dostupná sprcha a občerstvení. 
+U jobu je možné zadat soukromou a veřejnou poznámka. Veřejná poznámka slouží jako popis práce, který je po naplánování
+zobrazen brigádníkům. Soukromá poznámka je určena pouze pro organizátory a slouží k interní komunikaci. Evidované joby slouží jako předloha pro práce přidávané
+do plánu. Tento typ jobů je v aplikaci interně označen jako \textit{Proposed Job}, neboli navrhovaná práce, která ale nemusí být naplánována.
 
 Do seznamu je možné přidávat nové práce a upravovat již existující, vyhledávat a filtrovat.
 Jednotlivé joby je možné označit jako splněné nebo nežádoucí, což umožňuje organizátorům filtrovat práce, které již nejsou potřeba. Takové práce jsou v seznamu
 zařazeny na konec stránky. Připnutí naopak umožňuje organizátorům označit práci jako důležitou a zobrazit ji na začátku seznamu. Označené joby jsou od standardních
 barevně odlišeny.
 
-\subsection{Auta}
+\subsubsection{Auta}
 
 Záložka \textit{Auta} obsahuje seznam aut, která jsou k dispozici pro přepravu brigádníků na pracoviště. U každého auta je evidován název, počet míst, majitel,
 najeté kilometry a poznámka. Majitelem je vždy některý z registrovaných brigádníků. Na stránce je možné přidat, upravovat a odebírat auta.
@@ -179,7 +130,7 @@ Pro vyplacení kompenzace za použití auta je nutné evidovat počet najetých 
 se na základě tohoto údaje a aktuálního stavu odometru vypočítá počet najetých kilometrů. Tato hodnota je následně použita pro výpočet kompenzace. Aplikace 
 umožňuje evidovat výši kompenzace a údaj, zda došlo k proplacení.
 
-\subsection{Plány}
+\subsubsection{Plány}
 
 Záložka \textit{Plány} obsahuje seznam plánů, které byly vytvořeny pro aktuální ročník akce. Na každý den akce vzniká nový plán, který zahrnuje
 seznam brigádníků a jejich přiřazení na práce.
@@ -187,6 +138,9 @@ seznam brigádníků a jejich přiřazení na práce.
 Plán je možné vytvořit ručně nebo automaticky. Ruční vytvoření plánu je řešeno pomocí formuláře, který umožňuje vybrat práce pro daný den a následně 
 k nim přiřadit brigádníky. Organizátoři mohou naplánovat dopravu na pracoviště, systém umožňuje také sdílet dopravu s jinou prací. K vytvořenému záznamu
 o práci je možné přidávat poznámky. Z přiřazených brigádníků je vybrána zodpovědná osoba, která zodpovídá za komunikaci s organizátory a zadavatelem a za správné vykonání práce.
+Práce přiřazené v plánu jsou v aplikaci interně označeny jako \textit{Active Job}, neboli aktivně naplánovaná práce. Každá aktivní práce má předlohu v evidenci jobů.
+K práci je možné přiřadit soukromý a veřejný popis, které jsou ve výchozím nastavení shodné s popisem předlohy. Soukromý popis slouží k interní komunikaci organizátorů,
+veřejný popis je zobrazen brigádníkům v plánu.
 
 Aplikace automaticky rozpoznává konflikty v plánu a upozorní organizátory pomocí varovného symbolu v řádku tabulky.
 Konflikty mohou vzniknout v případě, že je na práci přiřazen nedostatek nebo přebytek brigádníků, 
@@ -196,10 +150,10 @@ ale v dané lokalitě není možné požadavek splnit.
 Stránka s plánem zobrazuje také statistiky pro daný den. Jsou zde zobrazeny informace o počtu brigádníků, kteří jsou přiřazeni na práci, počtu brigádníků, kteří
 práci nemají, počet prací v plánu a rozsah počtu pracovníků, které lze daný den na vybrané práce přiřadit.
 
-Je zde možnost využít automatické plánování, které je řešeno pomocí algoritmu, který je popsán v kapitole \ref{sec:planner}. Po výběru prací na daný den a spuštění
+Je zde možnost využít automatické plánování, řešené pomocí algoritmu, který je popsán v kapitole \ref{sec:planner}. Po výběru prací na daný den a spuštění
 plánovače dojde k automatickému přiřazení brigádníků na práce tak, aby nebyl vytvořen žádný konflikt. Pokud je v plánu již nějaký brigádník přiřazen na práci, 
-plánovač přiřazení zachová. Dojde také k naplánování dopravy a přiřazení zodpovědné osoby. Výjimkou v plánování je přiřazení brigádníků, kteří projevili zájem o adoraci,
-na práci v lokalitě, kde není možné požadavek splnit -- plánovač může takové přiřazení provést, pokud není možné přiřadit brigádníka na práci ve vhodnější lokalitě.
+plánovač přiřazení zachová. Dojde také k naplánování dopravy a přiřazení zodpovědné osoby. Pokud není možné vytvořit plán bez konfliktů, 
+vytvoří plánovač plán blízký optimálnímu řešení. Veškeré konflikty jsou zobrazeny v seznamu na stránce plánu.
 
 Plánování podporuje práci více uživatelů současně. Během plánování dochází na pozadí k pravidelné aktualizaci dat, aby bylo zajištěno,
 že uživatelé pracují s nejnovější verzí plánu. K aktualizaci dochází v intervalu 1 sekundy a k přenosu dat dojde pouze tehdy, pokud došlo od posledního požadavku ke změně,
@@ -208,19 +162,19 @@ Plánování podporuje práci více uživatelů současně. Během plánování 
 Aplikace umožňuje zobrazit plán v tisknutelné podobě. Jedná se o zjednodušenou černobílou verzi plánu v kompaktním zobrazení, které je vhodné pro tisk na 
 papír velikosti A4. Dodatečné CSS styly zajišťují správné rozdělení plánu na papír tak, aby naplánovaná práce nepřesahovala na více stran současně.
 
-\subsection{Administrace}
+\subsubsection{Administrace}
 
 Záložka \textit{Administrace} slouží k nastavení aktuálního ročníku a oblastí, ve kterých se akce koná. Je zde také možné upravovat
 práva uživatelů a prohlížet záznamy o změnách v systému, tzv. \textit{audit log}. Záznamy zahrnují veškeré akce, které mění data v databázi,
 například vytvoření, úpravu nebo smazání záznamu. Záznamy jsou řazeny chronologicky a obsahují informace o uživateli, který změnu provedl,
 o čase změny a o změněných datech. V záznamech je možné vyhledávat a filtrovat podle typu události.
 
-\subsection{Můj plán}
+\subsubsection{Můj plán}
 
 Záložka \textit{Můj plán} zobrazuje seznam prací, na které je uživatel přiřazen. Brigádník může zobrazit detail práce pro daný den,
 který obsahuje informace místě a popis práce, jména dalších brigádníků přiřazených na práci a způsob dopravy.
 
-\subsection{Profil}
+\subsubsection{Profil}
 
 Záložka \textit{Profil} zobrazuje informace o uživateli. Uživatel může upravit své osobní údaje, označit dny, kdy může pracovat a adorovat,
 a nastavit své případné alergie.
@@ -236,7 +190,7 @@ Pro dokumentaci API byl využit nástroj Swagger. Swagger je open-source framewo
 Swagger umožňuje vytvořit interaktivní dokumentaci API, která je přístupná na URL \textit{/swagger} v režimu vývoje. Dokumentace obsahuje seznam všech dostupných
 API endpointů, jejich popis, parametry a návratové hodnoty. Pro každý endpoint je možné vyzkoušet jeho funkčnost přímo v dokumentaci.
 Náhled dokumentace je zobrazen na obrázku \ref{fig:swagger}.
-Aplikace ve vývojovém režimu také obsahuje endpoint pro získání OpenAPI specifikace ve formátu JSON na adrese \textit{/swagger.json}.
+Aplikace ve vývojovém režimu také obsahuje endpoint pro získání OpenAPI specifikace ve formátu JSON na adrese \textit{/api/swagger.json}.
 
 \begin{figure}[h]
     \centering
@@ -263,3 +217,49 @@ Přenesená data jsou také komprimována pomocí gzip.
 V případě opakovaných požadavků na stránce s plánem, které probíhají automaticky každou sekundu, se jedná o přenos přibližně 40 kB dat oproti
 přibližně 5 MB za minutu, které by byly přeneseny bez využití těchto hlaviček. To umožňuje udržovat zobrazený plán stále aktuální i při pomalém či objemově limitovaném
 připojení k internetu.
+
+\subsection{Bezpečnost}
+
+Aplikace využívá knihovnu Zod pro validaci dat. Zod je knihovna pro TypeScript, která umožňuje definovat požadované typy a následně z těchto definic
+vytvořit validátor, který ověří, zda vstupní data odpovídají definovaným typům. Validátory jsou vytvořeny pro všechna data, která jsou přijímána z API.
+V případě, že data neodpovídají definovaným typům, dojde k odeslání HTTP kódu \texttt{400 Bad Request} s vysvětlením chyby.
+
+Pomocí knihovny Zod je možné z validátorů automaticky vytvářet typy pro TypeScript a také ověřovat formuláře na straně klienta před odesláním.
+To snižuje zátěž serveru kvůli kontrole neplatných vstupů a zároveň zvyšuje uživatelskou přívětivost.
+Pro vytvoření Zod validačních schémat pro tabulky v databázi byl využit automatický generátor pro Prisma, který při změně datových typů v databázi
+generuje validační schémata. Ukázka validačního schématu pro vytvoření uživatele je zobrazena v ukázce kódu \ref{code:zod}.
+Zod umožňuje definovat i složitější valiátory, například pro pole objektů, nebo provádět operace s daty během validace.
+V ukázce kódu je uveden typ \texttt{z.date().or(z.string().min(1).pipe(z.coerce.date()))} -- tento typ umožňuje přijmout objekt typu \texttt{Date} nebo řetězec o minimální
+délce~1, který lze převést na objekt typu \texttt{Date}. Pokud řetězec nelze převést na platné datum, dojde k chybě a validace se nezdaří.
+
+\begin{listing}[h]
+    \begin{minted}{typescript}
+import { z } from "zod";
+
+const WorkerCreateSchema = z
+  .object({
+    firstName: z.string().min(1),
+    lastName: z.string().min(1),
+    email: z.string().min(1).email(),
+    phone: z.string().min(1),
+    strong: z.boolean(),
+    allergyIds: z.array(z.nativeEnum(Allergy)),
+    availability: z.object({
+      workDays: z
+        .array(
+            z.date().or(z.string().min(1).pipe(z.coerce.date()))
+            )
+      adorationDays: z
+        .array(
+            z.date().or(z.string().min(1).pipe(z.coerce.date()))
+            )
+    }),
+  })
+  .strict();
+    \end{minted}
+    \caption{Ukázka Zod validačního schématu pro vytvoření uživatele}
+    \label{code:zod}
+\end{listing}
+
+Všechny požadavky na API kromě požadavků na přihlášení a čtení jsou zaznamenávány do databáze. Záznamy obsahují informace o uživateli, který požadavek
+provedl, o čase požadavku, o cíli požadavku a zaslaná data. Tyto záznamy lze zobrazit v administračním rozhraní webové aplikace a jsou pouze pro čtení.

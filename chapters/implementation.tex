@@ -6,3 +6,40 @@ věnují implementaci Plánovače a kontejnerizaci.
 \input{chapters/implementation/web.tex}
 \input{chapters/implementation/database.tex}
 \input{chapters/implementation/planner.tex}
+\input{chapters/implementation/docker.tex}
+
+\section{Možnosti rozšíření}
+
+V této sekci jsou popsány možnosti rozšíření aplikace, které nebyly implementovány v rámci této práce. Některé z těchto možností jsou součástí původní aplikace,
+ale nebylo možné je implementovat v rámci této práce z důvodu časového omezení a nebyly zahrnuty v zadání.
+
+Mezi možnosti rozšíření patří například evidence typů prací. Tyto typy prací by mohly být využity pro lepší přehlednost a organizaci práce. Plánovací
+systém by následně mohl využívat tyto typy tak, aby nepřiřazoval brigádníky opakovaně na stejné práce. Tato funkcionalita by mohla být využita i pro
+vyhledávání brigádníků, kteří mají zkušenosti s určitými typy prací. Pracovníci by také mohli v profilu vyjádřit preference k určitým typům prací.
+
+Mezi další možnosti rozšíření patří evidence vybavení a nástrojů, které jsou potřebné pro vykonávání jednotlivých prací. Evidence by zaznamenávala
+počty potřebného vybavení a na práci a docházelo by k párování prací s pracanty, kteří mají dané nástroje k dispozici.
+
+Další možností rozšíření je vytvoření systému pro zasílání upozornění. Tento systém by mohl být využit pro zasílání upozornění na nové práce, změny
+v plánu, změny v profilech pracantů, spuštění přihlašování a další. Hromadné zprávy by také mohly být využity administrátory pro zasílání zpráv všem
+účastníkům akce.
+
+Vhodným dodatkem by dále mohla být elektronická nástěnka, kam by organizátoři mohli přidávat obecné informace pro účastníky akce. Tato nástěnka by
+byla dostupná všem účastníkům po přihlášení do systému.
+
+\section{Nalezené chyby}
+
+TODO: Prisma
+
+Během vývoje bylo nalezeno několik chyb způsobených experimentální povahou použitých technologií. Všechny objevené chyby jsou v době psaní práce
+nahlášeny v repozitářích příslušných projektů a čekají na opravu. Jedná se o nedostatky, které neovlivňují funkčnost aplikace zásadním způsobem, ale mohou způsobit
+neoptimální chování.
+
+Mezi nalezené chyby patří například chybné zobrazení názvu stránky v kartě prohlížeče, ke které může dojít při přesměrování nebo při 
+návratu z jiné stránky. Tato chyba je způsobena nově přidaným Metadata API, které Next.js 13 využívá pro nastavování metadat stránky z kódu místo využití tradičních
+HTML tagů. Jedna z chyb se také projevuje při prvním načtení stránky nepřihlášeným uživatelem, kdy dojde k rychlému zobrazení nestylizované stránky před načtením
+přihlašovacího formuláře a v konzoli je zobrazena chyba. Tato chyba vzniká během kontroly přihlášení uživatele, která probíhá na straně serveru. V případě, že 
+uživatel není přihlášen, dojde k přesměrování na přihlašovací stránku. Jedná se o asynchronní React komponentu, která podle dokumentace Next.js 13 přesměrování podporuje a chyba by 
+měla být na serveru zachycena. Chyba je nahlášena v evidenci na GitHubu projektu a čeká na opravu, neovlivňuje však bezpečnost ani funkčnost stránky a klient
+chybu bez otevření konzole neuvidí.
+

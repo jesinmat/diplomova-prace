@@ -42,12 +42,8 @@ v repozitáři aplikace v souboru \texttt{README.md}.
 \section{Inicializace databáze}
 
 Po spuštění kontejnerů je nutné provést inicializaci databáze
-a vytvoření uživatelského účtu s administrátorskými právy. K tomuto účelu byl vytvořen inicializační kontejner, který
-obsahuje skripty potřebné pro inicializaci a správu databáze. Kontejner obsahuje skripty pro vytvoření potřebných tabulek v databázi,
-přidání prvního administrátorského účtu, nainstalovaný nástroj Prisma CLI a další.
-
-Jedná se o servisní kontejner určený pro jednorázové interaktivní spuštění. Kontejner umožňuje také přístup k databázi
-pomocí nástroje Prisma Studio, který umožňuje správu dat v databázi pomocí webového rozhraní. 
+a vytvoření uživatelského účtu s administrátorskými právy. Pro tento účel jsou v servisním kontejneru připraveny skripty,
+které interaktivně provedou uživatele prvním nastavením. Návod na spuštění včetně příkazů je součástí repozitáře aplikace.
 
 \section{Zálohování}
 
