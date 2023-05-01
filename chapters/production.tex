@@ -26,6 +26,12 @@ Hlavní komponentou kontejneru je webový server Nginx v režimu reverzní proxy
 společně s nástrojem \texttt{certbot}, který zajišťuje automatické obnovování SSL certifikátů pro subdoménu
 pomocí certifikační autority Let's Encrypt. Veškerá komunikace s aplikací je tedy šifrována, požadavky na
 nešifrované spojení jsou automaticky přesměrovány. 
+Zvolené řešení obsahuje také dodatečné bezpečnostní prvky a zaznamenává veškeré požadavky na aplikaci.
+Součástí kontejneru je například nástroj \texttt{fail2ban}, který na základě zaznamenaných požadavků
+blokuje IP adresy, které posílají opakované požadavky bez autorizace na různé adresy, pokouší se o
+zneužití častých chyb v aplikacích a podobně. Požadavky z blokovaných IP adres nejsou nadále zpracovávány, 
+což snižuje zátěž serveru.
+
 
 \section{Proces nasazení}
 

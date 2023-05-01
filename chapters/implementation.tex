@@ -29,8 +29,6 @@ byla dostupná všem účastníkům po přihlášení do systému.
 
 \section{Nalezené chyby}
 
-TODO: Prisma
-
 Během vývoje bylo nalezeno několik chyb způsobených experimentální povahou použitých technologií. Všechny objevené chyby jsou v době psaní práce
 nahlášeny v repozitářích příslušných projektů a čekají na opravu. Jedná se o nedostatky, které neovlivňují funkčnost aplikace zásadním způsobem, ale mohou způsobit
 neoptimální chování.
@@ -43,3 +41,5 @@ uživatel není přihlášen, dojde k přesměrování na přihlašovací strán
 měla být na serveru zachycena. Chyba je nahlášena v evidenci na GitHubu projektu a čeká na opravu, neovlivňuje však bezpečnost ani funkčnost stránky a klient
 chybu bez otevření konzole neuvidí.
 
+Další nalezenou chybou je nesprávné odvození typů při použití Prisma Client v TypeScriptu. V některých případech, kdy jsou v dotazu zahrnuta dodatečná vrácená pole, nedojde
+k odvození typů těchto polí a pro další použití v kódu je nutné vrácenou hodnotu manuálně přetypovat. Chyba je v kódu označena komentářem \texttt{FIXME} s vysvětlením problému.

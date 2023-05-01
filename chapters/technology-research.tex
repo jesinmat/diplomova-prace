@@ -18,7 +18,7 @@ Mezi nejoblíbenějšími technologiemi s více než 1 000 hlasy se umístily ta
 klientskou i serverovou část, nabízejí detailní dokumentaci a jsou aktivně vyvíjeny. Podporují také statické typování, částečné generování webových stránek na serveru (\textit{SSR} -- server side rendering),
 oddělené serverové částí s podporou přístupu k databázi i tvorbu API.
 
-Pro implementaci byl zvolen framework Next.js ve verzi 13. Tento framework je postaven na React.js a rozšiřuje jej o další funkce, například tvorbu API nebo pokročilejší nastavení serveru.
+Pro implementaci byl zvolen framework Next.js ve verzi 13. Tento framework je postaven na React.js a rozšiřuje jej o další funkce, například tvorbu API nebo pokročilejší nastavení serveru \cite{nextjs}.
 V době psaní práce podporuje React 18 SSR pouze v beta verzi, Next.js proto nabízí ve výchozím nastavení původní generování webových stránek u klienta.
 Během implementace však bude tato funkcionalita využita, protože přináší výhody v rychlosti načítání stránky, možnosti kešování a spouštění kódu na serveru.
 
@@ -42,6 +42,9 @@ protože zajišťuje spolehlivý přenos zpráv v případě, že jedna ze služ
 
 Službou pro poskytování fronty zpráv byla zvolena technologie RabbitMQ. Jedná se o open-source nástroj, který je dostupný zdarma. RabbitMQ je běžně používaným řešením
 pro fronty zpráv. Využívá otevřený standard AMQP, jehož implementace je pro mnoho jazyků, včetně TypeScriptu, dostupná zdarma \cite{rabbitmq}.
+
+Frontu zpráv je možné nahradit jinou implementací, která bude splňovat požadavky na přenos zpráv. Fronta slouží pouze jako prostředník pro přenos zpráv mezi webovou aplikací
+a plánovačem a nebude výrazně zatěžována, je tedy možné zvolit i jinou službu bez negativního dopadu na výkon systému.
 
 
 \section{Databáze}

@@ -16,6 +16,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install texlive texlive-xetex texlive-extra-utils texlive-lang-czechslovak texlive-bibtex-extra biber latexmk
+          pip3 install jsx-lexer
           
       - name: Run Arara
         run: arara DP_Jesina_Matyas_2023.tex

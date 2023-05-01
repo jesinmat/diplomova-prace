@@ -1,13 +1,13 @@
 \section{Databáze}
 
-Přístup k databázi z aplikace a plánovače je implementován pomocí knihovny Prisma. Prisma je moderní, rychle se rozvíjející ORM framework pro práci s různými typy databází. 
+Přístup k databázi z aplikace a plánovače je implementován pomocí knihovny Prisma. Prisma je moderní, rychle se rozvíjející ORM framework pro práci s různými typy databází \cite{prisma}. 
 Zakládá si na snadné integraci s jazykem TypeScript, díky kterému umožňuje pracovat s daty v databázích bezpečně. Podporuje také Javascript.
 
 Jedná se o poměrně nový produkt -- první verze byla zveřejněna v roce 2019. 
 Díky rozsáhlé komunitě a otevřenému zdrojovému kódu však dochází k neustálému zlepšování.
-V současné době jeho popularita rychle roste a podle statistik webu npmjs.com dosahuje přibližně 870 000 stažení týdně (na začátku roku 2022 to bylo 200 000). TODO: zdroj
+V současné době jeho popularita rychle roste a podle statistik webu \href{https://npmjs.com}{NPM.js} dosahuje přibližně 1 200 000 stažení týdně (na začátku roku 2022 to bylo 200 000) \cite{npm_prisma}.
 
-Prisma umožňuje spravovat databázi pomocí tzv. datového modelu (schématu), který je definován v souboru \texttt{schema.prisma}. 
+Prisma umožňuje spravovat strukturu dat v databázi pomocí tzv. datového modelu (schématu), který je definován v souboru \texttt{schema.prisma}. 
 Schéma je možné navrhnout manuálně, pokud databáze neexistuje, případně vygenerovat z existující databáze. Schéma se skládá z entit a jejich atributů a vztahů mezi nimi.
 Výňatek ze souboru je k dispozici ve výpisu \ref{fig:prisma-model}.
 

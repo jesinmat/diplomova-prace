@@ -11,10 +11,15 @@
 
 \usepackage[utf8]{inputenc}
 
-\usepackage{dirtree}
-\usepackage{minted}
 \usepackage{hyperref}
 \usepackage{pdfpages}
+\usepackage{dirtree}
+\usepackage{minted}
+
+\counterwithin{listing}{chapter}
+\renewcommand{\listingscaption}{Ukázka kódu}
+\renewcommand{\listoflistingscaption}{Seznam ukázek kódu}
+
 
 \usepackage[style=iso-numeric,backend=biber]{biblatex}
 \addbibresource{mybibliographyfile.bib}

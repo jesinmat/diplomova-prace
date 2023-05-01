@@ -34,7 +34,7 @@ Testy využívají asynchronní zápis pomocí klíčového slova \texttt{async}
 
 
 \begin{listing}[h]
-\begin{minted}[linenos]{javascript}
+\begin{minted}{javascript}
 describe("Plans", function () {
   it("deletes a plan", async function () {
     // Create a plan
@@ -63,3 +63,45 @@ describe("Plans", function () {
 \caption{Test API pro odstranění plánu}
 \label{code:api-test}
 \end{listing}
+
+\section{Ověření splnění požadavků}
+
+V této sekci jsou ověřeny požadavky na aplikaci, které byly definovány v sekcích \ref{sec:functional-requirements} a \ref{sec:nonfunctional-requirements}.
+
+
+\subsection{Funkční požadavky}
+
+\begin{itemize}
+  \item \textbf{FP1. Přihlášení a registrace:} přihlášení bylo implementováno pomocí odkazu zaslaného na e-mailovou adresu účastníka. Registrace v souladu se zadáním není součástí aplikace, organizátoři importují účty účastníku pomocí webového rozhraní aplikace.
+  \item \textbf{FP2. Správa oprávnění a uživatelských účtů:} sekce systému a API byly rozděleny podle potřebného oprávnění. Tato oprávnění může spravovat pouze uživatel s 
+  administrátorským oprávněním.
+  \item \textbf{FP3. Správa pracantů:} požadované údaje jsou evidovány a webová aplikace umožňuje jejich úpravu. Je k dispozici individuální přidání pracanta i hromadný import.
+  \item \textbf{FP4. Správa jobů:} joby je možné spravovat pomocí webové aplikace podle zadaných požadavků.
+  \item \textbf{FP5. Správa aut:} požadované údaje jsou ve webové aplikaci zobrazeny a je možné s nimi pracovat.
+  \item \textbf{FP6. Správa plánů:} implementace podporuje práci více uživatelů pomocí aktualizace dat na pozadí a zobrazení změn s minimálním zpožděním. 
+  \item \textbf{FP7. Automatický plánovač:} automatický plánovač byl implementován.
+  \item \textbf{FP8. Správa ročníků:} správa ročníků byla implementována jako součást administrační části webové aplikace.
+  \item \textbf{FP9. Správa oblastí:} aplikace umožňuje spravovat oblasti ročníku.
+  \item \textbf{FP10. Záznam systémových změn:} požadavky, které mění data v databázi, jsou zaneseny do historie požadavků a evidují se požadované údaje. Požadavky
+  lze zobrazit v administraci.
+  \item \textbf{FP11. API:} systém poskytuje API, které umožňuje přístup k datům systému. Webová aplikace využívá API k provádění operací, jedná se tedy o plnohodnotné API.
+\end{itemize}
+
+\subsection{Nefunkční požadavky}
+
+\begin{itemize}
+  \item \textbf{NP1. Bezpečnost:} webová aplikace i API vyžadují přihlášení. Databáze je spuštěna v kontejneru, který je připojen do společné sítě s webovou aplikací,
+  ale nemá přímý přístup k internetu. Aplikace bude uvedena do provozu na doméně akce SummerJob, která využívá HTTPS. V případě pokusu o přístup přes nešifrované spojení
+  musí dojít k přesměrování na šifrované spojení. Další parametry nasazení do produkčního prostředí jsou popsány v následující kapitole.
+  \item \textbf{NP2. Udržovatelnost a rozšiřitelnost:} výsledná aplikace využívá rozšířené technologie a standardy, například React a Bootstrap ve webové aplikaci,
+  PostgreSQL pro ukládání dat a Docker pro kontejnerizaci. Všechny tyto technologie jsou dobře zdokumentované a aktivně vyvíjené. Zdrojový kód je rozčleněn do logických celků
+  a API nabízí dokumentaci ve formátu Swagger UI a OpenAPI standardu.
+  \item \textbf{NP3. Nezávislost na platformě:} aplikace je díky kontejnerizace spustitelná na různých operačních systémech. Využití knihovny Bootstrap zajišťuje,
+  že webová aplikace je použitelná na mobilních zařízeních i počítačích.
+  \item \textbf{NP4. Rychlost plánovače:} během opakovaného používání plánovače bylo změřeno, že plánovač je schopen vygenerovat plán pro 150 pracantů a 50 jobů přibližně do 6 sekund.
+  Toto měření zahrnuje čas od zadání požadavku přes webové rozhraní až do zobrazení výsledného plánu a obsahuje tedy i komunikaci mezi klientem a serverem. Vzhledem k výrazně 
+  nižšímu času oproti požadavku nebylo měření času provedeno exaktně pomocí automatizovaných testů na plánovači, neboť z výsledku vyplývá, že plánovač je dostatečně rychlý.
+\end{itemize}
+
+Všechny požadavky byly splněny. Výsledná aplikace je funkční a splňuje požadavky zadání. Dodatečné bezpečnostní prvky týkající se komunikace mezi uživatelem
+a webovou aplikací je možné nastavit pomocí konfigurace webového serveru, na kterém bude aplikace provozována.

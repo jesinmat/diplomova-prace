@@ -60,6 +60,30 @@ Oprávnění byla rozdělena do následujících skupin:
     \item \textbf{Práce:} oprávnění \textit{Práce} umožňuje přidávat, upravovat a mazat navrhované práce. Toto oprávnění neumožňuje měnit naplánované práce.
 \end{itemize}
 
+Kontrola oprávnění přístupu na webovou stránku probíhá na serveru. Na základě relace přihlášeného uživatele je vyhodnoceno, zda má přístup k požadované stránce.
+V případě, že uživatel nemá oprávnění, je uživateli zobrazena chybová stránka s informací o nedostatečných oprávněních.
+Oprávnění je kontrolováno v souborech \texttt{layout.tsx}, které slouží jako kořenové šablony pro skupiny stránek. Kód v souboru se vykoná před vykreslením
+jiných stránek ze skupiny a slouží k sestavení základního vzhledu stránky společného pro všechny stránky ve skupině, do kterého je na určené místo vložena konkrétní stránka.
+Je tak možné například jednotně definovat vložení záhlaví stránky, které obsahuje navigační menu a tlačítko pro odhlášení. Šablony je možné vnořovat.
+V ukázce \ref{code:cars-layout} je soubor \texttt{layout.tsx} pro skupinu stránek \textit{Auta}, který kontroluje, zda má uživatel požadované oprávnění.
+Administrátorská práva není nutné při kontrole specifikovat, protože administrátoři mají přístup ke všem stránkám.
+
+\begin{listing}[h]
+  \begin{minted}{jsx}
+export default async function CarsLayout({children}: {
+  children: React.ReactNode;
+}) {
+  const permsCheck = await withPermissions([Permission.CARS]);
+  if (!permsCheck.success) {
+    return <AccessDeniedPage />;
+  }
+  return <>{children}</>;
+}
+    \end{minted}
+    \caption{Kontrola oprávnění pro přístup ke stránkám ve skupině Auta}
+    \label{code:cars-layout}
+\end{listing}
+
 \subsection{Získávání dat}
 
 Data jsou získávána pomocí API, které je popsáno v samostatné kapitole. Pro komunikaci s API byla využita knihovna \texttt{SWR} od vývojářů Next.js, která
@@ -84,6 +108,30 @@ uživatel musel čekat na jejich stažení. Nedochází tak například k zobraz
 
 Klientská část webové aplikace je rozdělena do několika částí, které jsou popsány níže. Každá část je zobrazena v samostatné záložce, která je přístupná
 pouze s odpovídajícím oprávněním. Všechny záložky jsou dostupné z hlavního menu, které je zobrazeno v horní části obrazovky.
+
+Pro zobrazení evidencí byly zvoleny tabulky, které jsou vhodné pro zobrazení strukturovaných dat v horizontálních řádcích.
+Během plánování je nutné přehledně zobrazit velké množství dat, například informace o práci, brigádnících a autech pro každou naplánovanou práci.
+Na mobilních zařízeních s vertikálně orientovaným displejem však nebylo možné efektivně zobrazit všechny potřebné informace.
+Řazení všech informací pod sebe by vedlo k přílišnému prodloužení stránky a ztížilo by to orientaci v datech. Po konzultaci s organizátory
+bylo rozhodnuto o zobrazení dat v posuvných tabulkách. Nevýhoda tohoto řešení je však v tom, že na mobilních zařízeních není možné zobrazit všechny
+informace najednou. Uživatel musí horizontálně posouvat tabulku, aby zobrazil všechny sloupce. Toto řešení bylo zvoleno jako kompromis mezi
+přehledností a přístupností. Plánování a náročné operace jsou prováděny převážně na počítačích, kde je dostatek místa pro zobrazení všech informací,
+zatímco mobilní rozhraní slouží převážně pro jednorázové změny. Srovnání zobrazení dat na počítači a mobilním zařízení je zobrazeno na obrázcích \ref{fig:plan-pc} a \ref{fig:plan-mobile}.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.9\textwidth]{chapters/images/plan-pc.pdf}
+    \caption{Zobrazení tabulky s plánem na počítači}
+    \label{fig:plan-pc}
+\end{figure}
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.9\textwidth]{chapters/images/plan-mobile.pdf}
+    \caption{Zobrazení tabulky s plánem na mobilním zařízení}
+    \label{fig:plan-mobile}
+\end{figure}
+
 
 \subsubsection{Pracanti}
 
@@ -142,7 +190,22 @@ Práce přiřazené v plánu jsou v aplikaci interně označeny jako \textit{Act
 K práci je možné přiřadit soukromý a veřejný popis, které jsou ve výchozím nastavení shodné s popisem předlohy. Soukromý popis slouží k interní komunikaci organizátorů,
 veřejný popis je zobrazen brigádníkům v plánu.
 
-Aplikace automaticky rozpoznává konflikty v plánu a upozorní organizátory pomocí varovného symbolu v řádku tabulky.
+Plánování je klíčovou součástí aplikace a musí být jednoduché a intuitivní. Naplánované práce jsou zobrazeny v tabulce, řádky obsahují
+základní informace o práci, jako je název, počet brigádníků nebo lokalita. Podrobné informace je možné zobrazit kliknutím na řádek. Po kliknutí 
+dojde k rozbalení řádku a zobrazení podrobností o práci, jako je popis, jména brigádníků, zodpovědná osoba, seznam dopravy a poznámka pro organizátory.
+Seznam pracantů je možné upravovat pomocí tlačítka vedle jména jednotlivých brigádníků nebo pomocí přetáhnutí řádku se jménem pracanta do jiné práce.
+Stejným způsobem lze přiřazovat i zatím nepřiřazené brigádníky. V seznamu jízd u dané práce se zobrazují pouze jízdy řidičů, kteří jsou přiřazeni na danou práci.
+Pokud je do jízdy zařazen brigádník z jiné práce, je jeho jméno uvedeno u příslušného záznamu. Ukázka je k dispozici na obrázku \ref{fig:plan-expanded}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{chapters/images/plan-expanded.pdf}
+    \caption{Rozbalený řádek s prací v plánu}
+    \label{fig:plan-expanded}
+\end{figure}
+
+
+Aplikace automaticky rozpoznává konflikty v plánu a upozorní organizátory pomocí varovného symbolu v řádku tabulky a popisu konfliktu.
 Konflikty mohou vzniknout v případě, že je na práci přiřazen nedostatek nebo přebytek brigádníků, 
 chybí doprava, není přiřazena zodpovědná osoba, je přiřazen pracovník s konfliktní alergií, nebo je přiřazen pracovník, který projevil zájem o adoraci v daný den,
 ale v dané lokalitě není možné požadavek splnit.
@@ -183,6 +246,32 @@ a nastavit své případné alergie.
 
 Pro implementaci API bylo využito Next.js API Routes. Jedná se o speciální stránky Next.js, které jsou přístupné na URL \textit{/api/*} a slouží k implementaci API.
 API dodržuje REST architekturu a využívá HTTP metody pro komunikaci. Pro přístup a úpravu dat je nezbytná autorizace pomocí session cookie, která je zaslána v hlavičce HTTP požadavku.
+
+\subsection{Způsob komunikace}
+
+Pro komunikaci s API byla zvolena REST\footnote{REST, Representational State Transfer} architektura, což je architektura webových služeb používaná pro výměnu dat mezi klientem a serverem pomocí HTTP protokolu. REST API se vyznačuje následujícími charakteristikami:
+
+\begin{itemize}
+  \item \textbf{Klient-server architektura:} klient a server jsou odděleny a komunikují pomocí standardních HTTP metod.
+  \item \textbf{Bezstavovost:} každý požadavek klienta obsahuje všechny informace, které server potřebuje pro vyřízení požadavku, bez potřeby zachování stavu mezi požadavky.
+  \item \textbf{Jednotné rozhraní:} REST API poskytuje jednotné rozhraní pro přístup k různým zdrojům dat, které jsou identifikovány pomocí URL adresy.
+\end{itemize}
+
+REST API umožňuje vývojářům vytvářet aplikace, které mohou komunikovat se serverem a získávat nebo odesílat data.
+Klient může posílat požadavky na server pomocí HTTP metod, jako jsou GET, POST, PUT, PATCH, DELETE a další
+a server odpovídá pomocí odpovědí s kódem stavu HTTP. Data v implementaci jsou přenášena ve formátu JSON. Zvolené metody
+určují účel požadavku a jeho dopad na zdroje na serveru. V aplikaci byly implementovány následující metody:
+
+\begin{itemize}
+  \item \textbf{GET:} metoda GET se používá pro získání dat z určitého zdroje na serveru. Tato metoda neprovádí žádné změny na serveru a odpověď serveru obsahuje požadovaná data.
+  \item \textbf{POST:} metoda POST se používá pro odeslání nových dat na server. Tato metoda se v aplikaci používá k vytvoření nového zdroje.
+  \item \textbf{PATCH:} metoda PATCH se používá pro aktualizaci části existujícího zdroje na serveru. Tato metoda umožňuje aktualizaci pouze určitých částí datového zdroje na serveru, zatímco ponechává ostatní části beze změn.
+  \item \textbf{DELETE:} metoda DELETE se používá pro odstranění zdroje na serveru. Tato metoda nevratně odstraňuje zdroj a jeho obsah z serveru.
+\end{itemize}
+
+Metody GET, PATCH a DELETE jsou idempotentní. Idempotentní metody garantují stejný výsledek operace bez ohledu na počet dotazů. Je tedy možné opakovaně
+zasílat stejný požadavek bez neočekávaného chování. Metoda POST není idempotentní, protože při opakovaném zaslání stejného požadavku může dojít k vytvoření duplicitního zdroje. 
+Ostatní metody definované ve standardu REST nejsou implementovány. REST API je rozšířeným standardem pro webové služby a je podporován mnoha moderními programovacími jazyky a frameworky.
 
 \subsection{Swagger}
 

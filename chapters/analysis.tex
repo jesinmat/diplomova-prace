@@ -21,7 +21,7 @@ Jsou základem při návrhu a implementaci systému.
 
 \begin{itemize}
     \item \textbf{FP1. Přihlášení a registrace:} uživatelé systému musí být schopni se přihlásit do systému, pokud jsou registrováni v právě probíhajícím ročníku. Registraci není třeba implementovat, probíhá externě a schvalují ji organizátoři akce.
-    \item \textbf{FP2. Správa oprávnění a uživatelských účtů:} uživatelé systému mají různá oprávnění, která určují, co všechno mohou v systému provádět. Oprávnění jsou rozdělena podle přístupu ke správně jednotlivých položek (pracanti, joby, auta, plánování). Administrátor má možnost nastavit oprávnění jednotlivým uživatelům, případně uživateli zcela zakázat přístup do systému.
+    \item \textbf{FP2. Správa oprávnění a uživatelských účtů:} uživatelé systému mají různá oprávnění, která určují, co všechno mohou v systému provádět. Oprávnění jsou rozdělena podle přístupu ke správě jednotlivých položek (pracanti, joby, auta, plánování). Administrátor má možnost nastavit oprávnění jednotlivým uživatelům, případně uživateli zcela zakázat přístup do systému.
     \item \textbf{FP3. Správa pracantů:} organizátoři akce musí být schopni spravovat seznam pracantů. Musí být možné přidávat, mazat a upravovat informace o pracantech. Tyto informace zahrnují jméno a příjmení, e-mail, telefonní číslo, alergie, dostupnost pracanta v jednotlivých dnech akce, informaci, zda a kdy se chce pracant účastnit adorací. Organizátoři sami během akce pracují a patří tedy mezi pracanty.
     \item \textbf{FP4. Správa jobů:} organizátoři akce musí být schopni spravovat seznam jobů. Musí být možné přidávat, mazat a upravovat informace o jobech. Tyto informace zahrnují název jobu, popis jobu, lokalitu, kontaktní osobu, alergeny na místě, celkový počet pracantů, které je možné přiřadit k jobu, požadovaný počet silných pracantů a počet dní nutných na splnění práce. U prací je evidována dostupnost občerstvení a sprchy. Jednotlivé joby musí být možné označit jako splněné, případně prioritní. Prioritní joby musí být v seznamu jobů odlišeny od ostatních a slouží ke zvýšení viditelnosti prací, které jsou pro organizátory důležité. V jobech musí být možné vyhledávat.
     \item \textbf{FP5. Správa aut:} organizátoři mohou spravovat dostupná auta. U aut se eviduje počet míst, vlastník (pracant) a najeté kilometry. Na základě najetých kilometrů během akce se po skončení akce počítá kompenzace pro řidiče. Systém by měl umožnit evidenci, zda byla kompenzace vyplacena.
@@ -34,6 +34,7 @@ Jsou základem při návrhu a implementaci systému.
 \end{itemize}
 
 \subsection{Nefunkční požadavky}
+\label{sec:nonfunctional-requirements}
 
 Nefunkční požadavky se týkají výkonu, spolehlivosti, bezpečnosti, škálovatelnosti a dalších aspektů systému. Nepopisují funkce systému, ale zaměřují se na celkovou kvalitu, provozuschopnost a výkonnost.
 
@@ -143,8 +144,10 @@ Dodaný grafický návrh neslouží jako přesný návrh vzhledu aplikace, ale j
 
 Na základě dodaného návrhu byl vypracován detailnější grafický návrh vybraných částí aplikace, který byl před zahájením vývoje schválen organizátory.
 Tento návrh byl vytvořen pomocí nástroje Bootstrap Studio, který umožňuje vytvářet grafické návrhy webových stránek pomocí interaktivního
-upravování předpřipravených komponent a export návrhu do HTML a CSS.
+upravování předpřipravených komponent a export návrhu do HTML a CSS \cite{bootstrap_studio}.
 Ukázka je k dispozici na obrázku \ref{fig:design-detail}. Vývoj vycházel z tohoto návrhu, který byl v průběhu implementace dále upravován podle potřeb organizátorů.
+Pro zajištění správného zobrazení a funkcionality na mobilních zařízeních je nutné dodržovat principy responzivního designu. Pro zajištění kompatibility bude použit
+framework Bootstrap, který nabízí responzivní kaskádové styly pro komponenty.
 
 \begin{figure}[ht]
     \centering
