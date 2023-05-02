@@ -12,10 +12,59 @@ dynamického serverového renderování. Výsledná aplikace je tedy kombinací 
 i přes experimentální verzi. Tým Next.js aktivně vyvíjí a testuje nové verze a experimentální funkce jsou stabilní a bezpečné. S ohledem na historii
 vývoje frameworku a jeho popularitu je pravděpodobné, že bude stabilní verze vydána průběhu tohoto roku \cite{nextjs_versions}.
 
+\subsection{Klientská a serverová část}
+
+Vybraný framework Next.js využívá technologii React pro implementaci klientské části. React je knihovna pro tvorbu uživatelských rozhraní, která je vyvíjena
+společností Facebook \cite{react}. Využívá komponentovou architekturu, která umožňuje znovupoužitelnost a zapouzdření kódu. Komponenty jsou nezávislé na sobě a
+komunikují pomocí vstupních a výstupních parametrů. Výstupem komponenty je virtuální DOM, který je následně porovnán s aktuálním DOM a provedeny
+pouze změny, které jsou nutné. Tento přístup umožňuje efektivní aktualizaci uživatelského rozhraní a zajišťuje vysoký výkon aplikace. React je
+vyvíjen jako open-source projekt a je využíván v mnoha projektech, například v aplikaci Facebook, Instagram, Netflix a dalších \cite{react_used}.
+
+Pro zápis kódu využívá React rozšíření jazyka JavaScript, které se nazývá JSX. JSX umožňuje vkládat HTML kód přímo do JavaScriptu, což má za cíl
+zjednodušit tvorbu uživatelského rozhraní. Podporuje i TypeScript ve formátu TSX, který dále rozšiřuje JSX o typové informace.
+Výhodou je kontrola syntaxe a typů při kompilaci, což umožňuje odhalit chyby v kódu před spuštěním aplikace. Ukázka kódu \ref{code:jsx} zobrazuje
+komponentu, která je zobrazena brigádníkům, pokud na daný den nejsou přiřazeni k žádné práci.
+
+\begin{listing}[h]
+  \begin{minted}{jsx}
+export default function MyPlanEmpty() {
+  return (
+    <>
+      <PageHeader title={"Můj plán"} isFluid={false} />
+      <section>
+        <div className="container">
+          <Box>
+            <h5>Nemáte naplánované žádné činnosti.</h5>
+          </Box>
+        </div>
+      </section>
+    </>
+  );
+}
+    \end{minted}
+    \caption{Ukázka kódu v TSX pro zobrazení prázdného plánu}
+    \label{code:jsx}
+\end{listing}
+
+Next.js podporuje tvorbu serverové části aplikace, která je v aplikaci využita pro správu dat a tvorbu API. 
+Struktura cesty, na které se konkrétní stránky zobrazují, je definována pomocí umístění souboru v adresáři \texttt{app}.
+Soubor \path{app/admin/logs/page.tsx} se tedy zobrazí na adrese \path{example.com/admin/logs/page}.
+Pro dynamické segmenty cesty je možné využít hranaté závorky, například \path{app/admin/[id]/page.tsx}. Komponenta v daném souboru
+v tomto případě jako parametr přijímá objekt \texttt{params}, který obsahuje hodnoty dynamických segmentů cesty.
+Stránky je také možné seskupovat do transparentních skupin, které se neprojeví v URL adrese, pomocí kulatých závorek. V aplikaci se toto oddělení využívá 
+například pro skupinu stránek určených k tisku dokumentů. Stránka pro tisk dokumentu, definovaná v souboru \path{app/(print)/print-plan/page.tsx}, se 
+zobrazí na adrese \path{example.com/print-plan}.
+
+Operace s daty a ověřování správnosti
+dat je nutné provádět na serveru, aby bylo zajištěno, že data v databázi jsou vždy logicky validní. Aplikace tak například neumožní vytvoření
+dvou aktivních událostí zároveň nebo přiřazení pracanta k více pracím současně.
+Serverová část je implementována pomocí Node.js a využívá TypeScript, který je před spuštěním aplikace kompilován do JavaScriptu.
+
+
 \subsection{Přihlašování}
 
-Správa přihlašování je implementována pomocí knihovny NextAuth.js, která poskytuje rozhraní pro přihlašování pomocí různých poskytovatelů. Knihovna podporuje
-přihlašování pomocí e-mailu, služeb Google, Facebook, GitHub, Twitter, Apple a dalších. Přihlašování pomocí uživatelského jména a hesla je autory knihovny 
+Správa přihlašování je implementována pomocí knihovny NextAuth.js. Knihovna podporuje
+přihlašování pomocí e-mailu, služeb Google, Facebook, GitHub, Twitter, Apple a dalších \cite{nextauth}. Přihlašování pomocí uživatelského jména a hesla je autory knihovny 
 považováno za nebezpečné a pro podporu je nutné implementovat vlastní ověření uživatelů. Na základě analýzy bylo proto zvoleno přihlašování pomocí e-mailu.
 K odesílání e-mailů využívá NextAuth.js balíček \texttt{nodemailer}, který umožňuje odesílání e-mailů pomocí protokolu SMTP. Pro odesílání e-mailů je nutné
 zvolit poskytovatele SMTP služby, vlastní e-mailový server není součástí řešení. Vzhled a obsah e-mailů je možné upravit pomocí šablon, které jsou součástí
@@ -100,9 +149,10 @@ Knihovna umožňuje provádět i jednorázové požadavky, které nejsou uklád�
 opakovat požadavky na server.
 
 Pro zrychlení načítání dat aplikace využívá předání serializovaných dat přímo ze serveru během server side renderingu. Tento přístup je využit například při
-zobrazení seznamu prací -- data jsou na serveru získána z databáze, serializována, předána do React aplikace a odeslána klientovi.
-Data jsou v prohlížeči deserializována a zobrazena, následně jsou aktualizována pomocí SWR na pozadí. Tento přístup umožňuje zobrazit data okamžitě, aniž by
-uživatel musel čekat na jejich stažení. Nedochází tak například k zobrazení prázdné tabulky a následnému překreslení po stažení dat.
+zobrazení seznamu prací -- data jsou na serveru načtena z databáze, serializována, předána do React aplikace a odeslána klientovi.
+Data jsou v prohlížeči deserializována spolu se strukturou stránky a zobrazena, následně jsou aktualizována pomocí SWR na pozadí. Tento přístup umožňuje zobrazit data okamžitě, aniž by
+uživatel musel čekat na jejich stažení po načtení skriptů, které následně načítají data z API.
+Nedochází tak například k zobrazení prázdné tabulky a následnému překreslení po stažení dat.
 
 \subsection{Rozvržení aplikace}
 
@@ -197,7 +247,7 @@ Seznam pracantů je možné upravovat pomocí tlačítka vedle jména jednotliv�
 Stejným způsobem lze přiřazovat i zatím nepřiřazené brigádníky. V seznamu jízd u dané práce se zobrazují pouze jízdy řidičů, kteří jsou přiřazeni na danou práci.
 Pokud je do jízdy zařazen brigádník z jiné práce, je jeho jméno uvedeno u příslušného záznamu. Ukázka je k dispozici na obrázku \ref{fig:plan-expanded}.
 
-\begin{figure}[H]
+\begin{figure}[h]
     \centering
     \includegraphics[width=0.9\textwidth]{chapters/images/plan-expanded.pdf}
     \caption{Rozbalený řádek s prací v plánu}
@@ -227,8 +277,17 @@ papír velikosti A4. Dodatečné CSS styly zajišťují správné rozdělení pl
 
 \subsubsection{Administrace}
 
-Záložka \textit{Administrace} slouží k nastavení aktuálního ročníku a oblastí, ve kterých se akce koná. Je zde také možné upravovat
-práva uživatelů a prohlížet záznamy o změnách v systému, tzv. \textit{audit log}. Záznamy zahrnují veškeré akce, které mění data v databázi,
+Záložka \textit{Administrace} slouží k nastavení aktuálního ročníku a oblastí, ve kterých se akce koná. Aktivní ročník
+označuje právě probíhající akci a eviduje datum začátku a konce akce. Ve správě ročníku je možné upravovat informace o oblastech, ve kterých
+se ročník koná. Atributy oblastí zahrnují název oblasti, nutnost dopravy a možnost adorace. Maximálně jeden ročník může být označen jako
+aktivní současně, ostatní ročníky jsou automaticky deaktivovány při aktivaci nového ročníku. Při deaktivaci dochází automaticky 
+k odhlášení všech přihlášených uživatelů bez administrátorského oprávnění a zablokování opětovného přihlášení.
+
+Jednotlivé uživatelské účty je možné zablokovat nebo odblokovat z administračního rozhraní i v průběhu ročníku. Účastník se zablokovaným účtem
+se nemůže přihlásit do systému, ale jeho údaje zůstávají zachovány a je možné s uživatelem dále pracovat. Administrátor také může uživatelům
+přiřazovat a odebírat oprávnění.
+
+V této části aplikace také možné prohlížet záznamy o změnách v systému, tzv. \textit{audit log}. Záznamy zahrnují veškeré akce, které mění data v databázi,
 například vytvoření, úpravu nebo smazání záznamu. Záznamy jsou řazeny chronologicky a obsahují informace o uživateli, který změnu provedl,
 o čase změny a o změněných datech. V záznamech je možné vyhledávat a filtrovat podle typu události.
 
@@ -245,14 +304,56 @@ a nastavit své případné alergie.
 \section{API}
 
 Pro implementaci API bylo využito Next.js API Routes. Jedná se o speciální stránky Next.js, které jsou přístupné na URL \textit{/api/*} a slouží k implementaci API.
+Ve složce projektu jsou tyto soubory uloženy ve složce \textit{pages/api}.
 API dodržuje REST architekturu a využívá HTTP metody pro komunikaci. Pro přístup a úpravu dat je nezbytná autorizace pomocí session cookie, která je zaslána v hlavičce HTTP požadavku.
+
+V době psaní práce dochází k přepracování původních API Routes na novou verzi. Nová verze API bude přesunuta do složky \textit{app/api} a nabízí automatické volání
+funkcí pro příslušné HTTP metody. Porovnání původního a nového způsobu zápisu API je uveden v ukázkách kódu \ref{code:api-old} a \ref{code:api-new}.
+Implementace využívá původní způsob zápisu API z důvodu lepší kompatibility s existujícími nástroji a knihovnou NextAuth. Podle autorů Next.js budou oba způsoby zápisu API
+podporovány i v dalších verzích. Nová verze API nepřináší oproti použité implementaci významné výhody.
+
+\begin{listing}[h]
+  \begin{minted}{typescript}
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
+  if (req.method === "GET") {
+    // handle GET request
+    return res.status(200).json({ data });
+  } else if (req.method === "POST") {
+    // handle POST request
+  } else {
+    res.status(405).end();
+  }
+}
+  \end{minted}
+  \caption{Původní způsob zápisu API}
+  \label{code:api-old}
+\end{listing}
+
+\begin{listing}[h]
+\begin{minted}{typescript}
+export async function GET(request: Request) {
+  // handle GET request
+  return NextResponse.json({ data })
+}
+
+export async function POST(request: Request) {
+  // handle POST request
+}
+  \end{minted}
+  \caption{Nový způsob zápisu API}
+  \label{code:api-new}
+\end{listing}
 
 \subsection{Způsob komunikace}
 
-Pro komunikaci s API byla zvolena REST\footnote{REST, Representational State Transfer} architektura, což je architektura webových služeb používaná pro výměnu dat mezi klientem a serverem pomocí HTTP protokolu. REST API se vyznačuje následujícími charakteristikami:
+
+Pro komunikaci s API byla zvolena REST\footnote{REST, Representational State Transfer} architektura, což je architektura webových služeb používaná pro výměnu dat mezi klientem a serverem \cite{rest}. REST API se vyznačuje následujícími charakteristikami:
 
 \begin{itemize}
-  \item \textbf{Klient-server architektura:} klient a server jsou odděleny a komunikují pomocí standardních HTTP metod.
+  \item \textbf{Klient-server architektura:} klient a server jsou odděleni.
   \item \textbf{Bezstavovost:} každý požadavek klienta obsahuje všechny informace, které server potřebuje pro vyřízení požadavku, bez potřeby zachování stavu mezi požadavky.
   \item \textbf{Jednotné rozhraní:} REST API poskytuje jednotné rozhraní pro přístup k různým zdrojům dat, které jsou identifikovány pomocí URL adresy.
 \end{itemize}
@@ -275,11 +376,11 @@ Ostatní metody definované ve standardu REST nejsou implementovány. REST API j
 
 \subsection{Swagger}
 
-Pro dokumentaci API byl využit nástroj Swagger. Swagger je open-source framework pro návrh, vytváření, dokumentaci a používání REST API.
-Swagger umožňuje vytvořit interaktivní dokumentaci API, která je přístupná na URL \textit{/swagger} v režimu vývoje. Dokumentace obsahuje seznam všech dostupných
+Pro dokumentaci API byl využit nástroj Swagger. Swagger je open-source framework pro návrh, vytváření, dokumentaci a používání REST API \cite{swagger_ui}.
+Swagger UI umožňuje vytvořit interaktivní dokumentaci API, která je přístupná na URL \textit{/swagger} v režimu vývoje. Dokumentace obsahuje seznam všech dostupných
 API endpointů, jejich popis, parametry a návratové hodnoty. Pro každý endpoint je možné vyzkoušet jeho funkčnost přímo v dokumentaci.
 Náhled dokumentace je zobrazen na obrázku \ref{fig:swagger}.
-Aplikace ve vývojovém režimu také obsahuje endpoint pro získání OpenAPI specifikace ve formátu JSON na adrese \textit{/api/swagger.json}.
+Aplikace ve vývojovém režimu také obsahuje endpoint pro získání OpenAPI specifikace \cite{openapi} ve formátu JSON na adrese \textit{/api/swagger.json}.
 
 \begin{figure}[h]
     \centering
@@ -309,7 +410,7 @@ připojení k internetu.
 
 \subsection{Bezpečnost}
 
-Aplikace využívá knihovnu Zod pro validaci dat. Zod je knihovna pro TypeScript, která umožňuje definovat požadované typy a následně z těchto definic
+Aplikace využívá knihovnu Zod pro validaci dat \cite{zod}. Zod je knihovna pro TypeScript, která umožňuje definovat požadované typy a následně z těchto definic
 vytvořit validátor, který ověří, zda vstupní data odpovídají definovaným typům. Validátory jsou vytvořeny pro všechna data, která jsou přijímána z API.
 V případě, že data neodpovídají definovaným typům, dojde k odeslání HTTP kódu \texttt{400 Bad Request} s vysvětlením chyby.
 
@@ -318,11 +419,11 @@ To snižuje zátěž serveru kvůli kontrole neplatných vstupů a zároveň zvy
 Pro vytvoření Zod validačních schémat pro tabulky v databázi byl využit automatický generátor pro Prisma, který při změně datových typů v databázi
 generuje validační schémata. Ukázka validačního schématu pro vytvoření uživatele je zobrazena v ukázce kódu \ref{code:zod}.
 Zod umožňuje definovat i složitější valiátory, například pro pole objektů, nebo provádět operace s daty během validace.
-V ukázce kódu je uveden typ \texttt{z.date().or(z.string().min(1).pipe(z.coerce.date()))} -- tento typ umožňuje přijmout objekt typu \texttt{Date} nebo řetězec o minimální
+V ukázce kódu je uveden validátor \mintinline{javascript}|z.date().or(z.string().min(1).pipe(z.coerce.date()))| -- tento typ umožňuje přijmout objekt typu \texttt{Date} nebo řetězec o minimální
 délce~1, který lze převést na objekt typu \texttt{Date}. Pokud řetězec nelze převést na platné datum, dojde k chybě a validace se nezdaří.
 
 \begin{listing}[h]
-    \begin{minted}{typescript}
+    \begin{minted}{javascript}
 import { z } from "zod";
 
 const WorkerCreateSchema = z

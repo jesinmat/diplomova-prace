@@ -11,6 +11,28 @@ dlouholetí organizátoři akce SummerJob. Dále se na zkušebním provozu mohli
 Pomocí tohoto procesu bylo zjištěno několik nedostatků, které byly následně odstraněny. Jednalo se zejména o specifické požadavky pro akci SummerJob, které nebyly
 v původním návrhu specifikovány. 
 
+Pro testovací účely byla pro aplikaci generována data pomocí nástroje Faker.js \cite{fakerjs}. Tento nástroj umožňuje generovat náhodná data v různých formátech, například jména,
+emailové adresy, adresy, telefonní čísla a další. Díky tomu bylo možné vytvořit testovací data, která byla podobná reálným datům, a tím lépe otestovat
+funkčnost aplikace. Ukázka generování náhodných dat je uvedena v \ref{code:faker}.
+
+\begin{listing}[h]
+  \begin{minted}{javascript}
+import { faker } from "@faker-js/faker/locale/cz";
+
+await prisma.worker.create({
+  data: {
+    firstName: faker.name.firstName(),
+    lastName: faker.name.lastName(),
+    phone: faker.phone.number("### ### ###"),
+    email: faker.internet.email(firstName, lastName).toLocaleLowerCase(),
+    isStrong: Math.random() > 0.75
+  }
+})
+    \end{minted}
+    \caption{Kontrola oprávnění pro přístup ke stránkám ve skupině Auta}
+    \label{code:faker}
+\end{listing}
+
 \section{Testování API}
 
 Pro zajištění správné funkcionality API byly vytvořeny automatizované testy. Tyto testy ověřují, že API vrací očekávaná data a že nedochází k chybám při zpracování požadavků.
