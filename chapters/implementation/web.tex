@@ -8,16 +8,16 @@ Od verze 13 podporuje Next.js experimentálně kompletní či částečné rende
 Částečná tvorba výsledných stránek na serveru umožňuje využít přístup k databázi bez nutnosti následných požadavků na API, což snižuje dobu načítání stránky.
 Také je možné využít statické generování, které je vhodné pro neměnná data, například chybové stránky. Stránka je během sestavení aplikace vygenerována a v případě chyby
 je klientské části předána jako statický obsah. Výhodou je rychlejší zobrazení oproti vykreslování pomocí JavaScriptu na straně klienta a menší zatížení serveru, než v případě
-dynamického serverového renderování. Výsledná aplikace je tedy kombinací statických a dynamických stránek. Vzhledem k výhodám tohoto přístupu byla zvolena verze 13 frameworku Next.js
-i přes experimentální verzi. Tým Next.js aktivně vyvíjí a testuje nové verze a experimentální funkce jsou stabilní a bezpečné. S ohledem na historii
+dynamického serverového renderování. Výsledná aplikace je tedy kombinací statických a dynamických stránek. Vzhledem k výhodám tohoto přístupu byla zvolena verze 13 frameworku Next.js,
+přestože se jedná o beta verzi. Tým Next.js aktivně vyvíjí a testuje nové verze a během vývoje nebyly zaznamenány kritické chyby. S ohledem na historii
 vývoje frameworku a jeho popularitu je pravděpodobné, že bude stabilní verze vydána průběhu tohoto roku \cite{nextjs_versions}.
 
 \subsection{Klientská a serverová část}
 
 Vybraný framework Next.js využívá technologii React pro implementaci klientské části. React je knihovna pro tvorbu uživatelských rozhraní, která je vyvíjena
-společností Facebook \cite{react}. Využívá komponentovou architekturu, která umožňuje znovupoužitelnost a zapouzdření kódu. Komponenty jsou nezávislé na sobě a
-komunikují pomocí vstupních a výstupních parametrů. Výstupem komponenty je virtuální DOM, který je následně porovnán s aktuálním DOM a provedeny
-pouze změny, které jsou nutné. Tento přístup umožňuje efektivní aktualizaci uživatelského rozhraní a zajišťuje vysoký výkon aplikace. React je
+společností Facebook \cite{react}. Využívá komponentovou architekturu, která umožňuje znovupoužitelnost a zapouzdření kódu. Komponenty jsou na sobě nezávislé a
+komunikují pomocí předávání parametrů. Výstupem komponenty je virtuální DOM\footnote{Document Object Model}, který je následně porovnán s aktuálním DOM a v existující
+stránce jsou provedeny pouze nutné změny. Tento přístup umožňuje efektivní aktualizaci uživatelského rozhraní a zajišťuje vysoký výkon aplikace. React je
 vyvíjen jako open-source projekt a je využíván v mnoha projektech, například v aplikaci Facebook, Instagram, Netflix a dalších \cite{react_used}.
 
 Pro zápis kódu využívá React rozšíření jazyka JavaScript, které se nazývá JSX. JSX umožňuje vkládat HTML kód přímo do JavaScriptu, což má za cíl
@@ -63,10 +63,10 @@ Serverová část je implementována pomocí Node.js a využívá TypeScript, kt
 
 \subsection{Přihlašování}
 
-Správa přihlašování je implementována pomocí knihovny NextAuth.js. Knihovna podporuje
+Správa přihlašování je implementována pomocí knihovny NextAuth.js. Zvolená knihovna podporuje
 přihlašování pomocí e-mailu, služeb Google, Facebook, GitHub, Twitter, Apple a dalších \cite{nextauth}. Přihlašování pomocí uživatelského jména a hesla je autory knihovny 
 považováno za nebezpečné a pro podporu je nutné implementovat vlastní ověření uživatelů. Na základě analýzy bylo proto zvoleno přihlašování pomocí e-mailu.
-K odesílání e-mailů využívá NextAuth.js balíček \texttt{nodemailer}, který umožňuje odesílání e-mailů pomocí protokolu SMTP. Pro odesílání e-mailů je nutné
+K odesílání e-mailů využívá NextAuth.js balíček \texttt{nodemailer}, který umožňuje komunikaci s e-mailovým serverem pomocí protokolu SMTP. Pro odesílání e-mailů je nutné
 zvolit poskytovatele SMTP služby, vlastní e-mailový server není součástí řešení. Vzhled a obsah e-mailů je možné upravit pomocí šablon, které jsou součástí
 implementace.
 
@@ -86,12 +86,13 @@ týden práce a čas pro vyřízení administrativy po skončení akce.
 Ověřování dotazů na server probíhá pomocí knihovny NextAuth.js, která využívá databázi pro ukládání uživatelů a jejich identifikačních údajů. Při každém přechodu na stránku
 nebo dotazu na API je na server odeslán požadavek s cookie, která obsahuje identifikátor relace. Server ověří platnost relace v databázi a v případě úspěchu jsou zobrazeny
 požadované údaje. V případě neplatného identifikátoru je uživatel přesměrován na přihlašovací stránku. Knihovna NextAuth.js umožňuje také správu přihlášení bez použití databáze pomocí
-technologie JWT\footnote{JSON Web Token}, která umožňuje ověření uživatele pomocí serverem šifrovaného tokenu. Token obsahuje informace o uživateli 
+technologie JWT\footnote{JSON Web Token}, která umožňuje uložení informací o aktuální relaci pomocí serverem šifrovaného tokenu. Token obsahuje informace o uživateli 
 a při každém požadavku dochází k jeho ověření na serveru bez nutnosti přístupu k databázi. Tento způsob však neumožňuje snadno zneplatnit relaci uživatele, například při změně aktivního ročníku.
 Také není vhodný pro informace, které se mohou v čase měnit, například oprávnění uživatele. Proto byla zvolena strategie ověřování pomocí databáze.
 
 Cookie využívá atributy \texttt{HttpOnly} a \texttt{SameSite}, které zabraňují přístupu k hodnotě cookie ze skriptů a
-pomáhají předcházet útokům typu CSRF. Dále je cookie chráněno proti úniku přes nezabezpečené připojení pomocí atributu \texttt{Secure}. 
+pomáhají předcházet útokům typu CSRF. Pro tento využívá knihovna také cookie s jednorázovou hodnotou (CSRF Token), která je nutná pro ověření přihlášení uživatele.
+Dále je cookie chráněno proti úniku přes nezabezpečené připojení pomocí atributu \texttt{Secure}. 
 
 Registrace dobrovolníků je řešena externě a organizátoři mají možnost importovat seznam vybraných dobrovolníků do databáze v záložce \textit{Pracanti}.
 
@@ -99,6 +100,7 @@ Registrace dobrovolníků je řešena externě a organizátoři mají možnost i
 
 Uživatelé byli rozděleni do několika skupin podle požadovaných oprávnění. Každá skupina má přístup k jiným částem aplikace, které jsou pro ni relevantní.
 Je tak možné určit organizátory, kteří mají přístup k evidenci dobrovolníků, skupinu zodpovědnou za tvorbu plánů, administrátory a další.
+Jeden uživatel může mít více oprávnění současně.
 Oprávnění byla rozdělena do následujících skupin:
 
 \begin{itemize}
@@ -106,7 +108,7 @@ Oprávnění byla rozdělena do následujících skupin:
     \item \textbf{Plány:} uživatelé s oprávněním \textit{Plány} mají přístup k tvorbě plánů a jejich úpravě. Pro tento účel mají pomocí API přístup k evidenci dobrovolníků, aut i prací, ale nemohou je upravovat.
     \item \textbf{Pracanti:} uživatelé s oprávněním \textit{Pracanti} mají přístup k evidenci dobrovolníků. Můžou do ní přidávat nové záznamy, upravovat je a mazat.
     \item \textbf{Auta:} uživatelé s oprávněním \textit{Auta} mají přístup k evidenci aut. Auta lze přidávat, upravovat a odstraňovat. Pro přiřazení auta k majiteli mají pomocí API přístup k evidenci dobrovolníků, ale nemohou ji upravovat.
-    \item \textbf{Práce:} oprávnění \textit{Práce} umožňuje přidávat, upravovat a mazat navrhované práce. Toto oprávnění neumožňuje měnit naplánované práce.
+    \item \textbf{Práce:} oprávnění \textit{Práce} umožňuje přidávat, upravovat a mazat navrhované práce. Toto oprávnění neumožňuje měnit práce v plánu.
 \end{itemize}
 
 Kontrola oprávnění přístupu na webovou stránku probíhá na serveru. Na základě relace přihlášeného uživatele je vyhodnoceno, zda má přístup k požadované stránce.
@@ -136,7 +138,7 @@ export default async function CarsLayout({children}: {
 \subsection{Získávání dat}
 
 Data jsou získávána pomocí API, které je popsáno v samostatné kapitole. Pro komunikaci s API byla využita knihovna \texttt{SWR} od vývojářů Next.js, která
-rozšiřuje funkce standardní knihovny \texttt{fetch} a je vhodná pro použití v React aplikacích. Knihovna je založena na principu \textit{stale-while-revalidate},
+rozšiřuje funkce standardní knihovny \texttt{fetch} a je vhodná pro použití v React aplikacích \cite{swr}. Knihovna je založena na principu \textit{stale-while-revalidate},
 který zajišťuje plynulou aktualizaci dat. Při prvním načtení dat je zobrazena poslední stažená verze a následně jsou data aktualizována na pozadí. Tento přístup
 umožňuje rychlé zobrazení dat i v případě pomalého připojení, pokud jsou data již stažena a uložena v prohlížeči. Lze nastavit automatickou aktualizaci dat 
 v pravidelných intervalech, což je využito například při zobrazení aktuálního stavu plánů. Ve výchozím nastavení nestahuje data, pokud daná karta prohlížeče není
@@ -150,6 +152,7 @@ opakovat požadavky na server.
 
 Pro zrychlení načítání dat aplikace využívá předání serializovaných dat přímo ze serveru během server side renderingu. Tento přístup je využit například při
 zobrazení seznamu prací -- data jsou na serveru načtena z databáze, serializována, předána do React aplikace a odeslána klientovi.
+Jedná se o doporučený způsob popsaný v dokumentaci Next.js \cite{nextjs_data}.
 Data jsou v prohlížeči deserializována spolu se strukturou stránky a zobrazena, následně jsou aktualizována pomocí SWR na pozadí. Tento přístup umožňuje zobrazit data okamžitě, aniž by
 uživatel musel čekat na jejich stažení po načtení skriptů, které následně načítají data z API.
 Nedochází tak například k zobrazení prázdné tabulky a následnému překreslení po stažení dat.
@@ -216,7 +219,7 @@ do plánu. Tento typ jobů je v aplikaci interně označen jako \textit{Proposed
 
 Do seznamu je možné přidávat nové práce a upravovat již existující, vyhledávat a filtrovat.
 Jednotlivé joby je možné označit jako splněné nebo nežádoucí, což umožňuje organizátorům filtrovat práce, které již nejsou potřeba. Takové práce jsou v seznamu
-zařazeny na konec stránky. Připnutí naopak umožňuje organizátorům označit práci jako důležitou a zobrazit ji na začátku seznamu. Označené joby jsou od standardních
+zařazeny na konec stránky. Připnutí naopak umožňuje organizátorům označit práci jako důležitou a zobrazit ji na začátku seznamu. Připnuté joby jsou od standardních
 barevně odlišeny.
 
 \subsubsection{Auta}
@@ -236,7 +239,7 @@ seznam brigádníků a jejich přiřazení na práce.
 Plán je možné vytvořit ručně nebo automaticky. Ruční vytvoření plánu je řešeno pomocí formuláře, který umožňuje vybrat práce pro daný den a následně 
 k nim přiřadit brigádníky. Organizátoři mohou naplánovat dopravu na pracoviště, systém umožňuje také sdílet dopravu s jinou prací. K vytvořenému záznamu
 o práci je možné přidávat poznámky. Z přiřazených brigádníků je vybrána zodpovědná osoba, která zodpovídá za komunikaci s organizátory a zadavatelem a za správné vykonání práce.
-Práce přiřazené v plánu jsou v aplikaci interně označeny jako \textit{Active Job}, neboli aktivně naplánovaná práce. Každá aktivní práce má předlohu v evidenci jobů.
+Práce přiřazené v plánu jsou v aplikaci interně označeny jako \textit{Active Job}, neboli aktivní (naplánovaná) práce. Každá aktivní práce má předlohu v evidenci jobů.
 K práci je možné přiřadit soukromý a veřejný popis, které jsou ve výchozím nastavení shodné s popisem předlohy. Soukromý popis slouží k interní komunikaci organizátorů,
 veřejný popis je zobrazen brigádníkům v plánu.
 
@@ -277,7 +280,7 @@ papír velikosti A4. Dodatečné CSS styly zajišťují správné rozdělení pl
 
 \subsubsection{Administrace}
 
-Záložka \textit{Administrace} slouží k nastavení aktuálního ročníku a oblastí, ve kterých se akce koná. Aktivní ročník
+Záložka \textit{Administrace} slouží k nastavení aktuálního ročníku a oprávnění uživatelů. Aktivní ročník
 označuje právě probíhající akci a eviduje datum začátku a konce akce. Ve správě ročníku je možné upravovat informace o oblastech, ve kterých
 se ročník koná. Atributy oblastí zahrnují název oblasti, nutnost dopravy a možnost adorace. Maximálně jeden ročník může být označen jako
 aktivní současně, ostatní ročníky jsou automaticky deaktivovány při aktivaci nového ročníku. Při deaktivaci dochází automaticky 
@@ -303,7 +306,7 @@ a nastavit své případné alergie.
 
 \section{API}
 
-Pro implementaci API bylo využito Next.js API Routes. Jedná se o speciální stránky Next.js, které jsou přístupné na URL \textit{/api/*} a slouží k implementaci API.
+Pro implementaci API bylo využito Next.js API Routes. Jedná se o stránky Next.js, které jsou přístupné na URL \textit{/api/*} a slouží k implementaci API.
 Ve složce projektu jsou tyto soubory uloženy ve složce \textit{pages/api}.
 API dodržuje REST architekturu a využívá HTTP metody pro komunikaci. Pro přístup a úpravu dat je nezbytná autorizace pomocí session cookie, která je zaslána v hlavičce HTTP požadavku.
 

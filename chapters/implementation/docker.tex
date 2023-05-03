@@ -7,7 +7,7 @@ Vytvořené obrazy nejsou uloženy ve veřejném repozitáři, je nutné je pře
 \subsection{Kontejnerizace služeb}
 
 Pro ostrý provoz webové aplikace byl vytvořen kontejner vycházející z obrazu \texttt{node:18-slim}. Tento obraz obsahuje 
-Node.js ve verzi 18 LTS, která byla vybrána z důvodu aktivního vývoje a dlouhodobé podpory, a je založen na operačním systému Debian 11.
+Node.js ve verzi 18 LTS, která byla vybrána z důvodu aktivního vývoje a dlouhodobé podpory \cite{node_releases}, a je založen na operačním systému Debian 11.
 Proces vytváření kontejneru webové aplikace využívá třístupňové sestavení. V první fázi dojde ke stažení a instalaci závislostí pomocí nástroje \texttt{npm}.
 Tyto závislosti se následně překopírují do druhé fáze, která vytvoří produkční verzi aplikace pomocí nástroje \texttt{next} a vygeneruje potřebné typy pro Prisma ORM.
 V poslední fázi se vytvoří kontejner s produkční verzí aplikace, který obsahuje pouze potřebné soubory pro produkční nasazení.

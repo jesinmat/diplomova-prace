@@ -36,13 +36,13 @@ await prisma.worker.create({
 \section{Testování API}
 
 Pro zajištění správné funkcionality API byly vytvořeny automatizované testy. Tyto testy ověřují, že API vrací očekávaná data a že nedochází k chybám při zpracování požadavků.
-Testy byly vytvořeny pomocí knihoven Chai a Mocha, rozšířené o knihovnu supertest pro testování HTTP požadavků.
+Testy byly vytvořeny pomocí knihoven \texttt{Chai} \cite{chai} a \texttt{Mocha} \cite{mocha}, rozšířené o knihovnu \texttt{supertest} \cite{supertest} pro testování HTTP požadavků.
 Mocha je rozšířeným nástrojem pro testování JavaScriptových aplikací, který umožňuje vytvářet testovací sady a testy. Podporuje asynchronní testování a umožňuje
-kombinovat různé styly zápisu testů. Chai nabízí více možností zápisu validace dat, v testech je využit styl BDD. Tento styl umožňuje používat přirozený jazyk
+kombinovat různé styly zápisu testů. Chai nabízí více možností zápisu validace dat, v testech je využit styl BDD\footnote{Behavior Driven Development}. Tento styl umožňuje používat přirozený jazyk
 pro popis testů, což zvyšuje čitelnost testů. Supertest je knihovna, která umožňuje testovat HTTP požadavky. V testech je využívána pro odesílání požadavků na API.
 
-Vzhledem k použité metodě přihlašování není možné automaticky generovat přístupový token, na začátku testů je tedy v databázi automaticky
-vytvořen uživatel s administrátorským účtem a do tabulky aktivních přihlášení je vložen uměle vytvořený token. 
+Vzhledem k použité metodě přihlašování není možné automaticky generovat přístupový token pomocí knihovny NextAuth.js, na začátku testů je tedy v databázi automaticky
+vytvořen uživatel s administrátorským účtem a do tabulky aktivních přihlášení je testovacím skriptem vložen uměle vytvořený token. 
 
 Testování probíhá na produkční verzi webové aplikace s prázdnou databází. Testy pokrývají téměř všechny dostupné endpointy API, aby bylo možné
 ověřit, že všechny funkce API fungují správně. Výjimku tvoří endpointy pro přihlášení pomocí e-mailu, které vzhledem k povaze přihlášení nelze 
@@ -51,7 +51,7 @@ pomocí API testů snadno otestovat. Pro kontrolu jednotlivých API endpointů j
 \subsection{Ukázka testů}
 
 Test v ukázce \ref{code:api-test} ověřuje funkčnost požadavku na odstranění plánu.
-Nejprve je vytvořen plán, následně je získán seznam všech plánů po odstranění plánu je získán seznam plánů znovu a je ověřeno, že plán byl odstraněn.
+Nejprve je vytvořen plán, následně je získán seznam všech plánů a po odstranění plánu je získán seznam plánů znovu a je ověřeno, že plán byl odstraněn.
 Testy využívají asynchronní zápis pomocí klíčového slova \texttt{async} a \texttt{await}, které umožňuje zapisovat asynchronní kód jako synchronní bez zanořování.
 
 

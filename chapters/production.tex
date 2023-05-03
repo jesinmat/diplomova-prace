@@ -20,7 +20,7 @@ restartu kontejneru, což zajišťuje dostupnost i v případě neočekávané c
 
 Pro propojení aplikace s doménou \url{www.summerjob.eu} byl využit DNS záznam typu A pro subdoménu
 \texttt{jobplanner.summerjob.eu}, který směřuje na IP adresu serveru. Na serveru byl následně
-nastaven kontejner SWAG\footnote{Secure Web Application Gateway, \url{https://docs.linuxserver.io/general/swag}}, který obsahuje nástroje pro bezpečný provoz webových aplikací.
+nastaven kontejner SWAG\footnote{Secure Web Application Gateway} \cite{swag}, který obsahuje nástroje pro bezpečný provoz webových aplikací.
 Hlavní komponentou kontejneru je webový server Nginx v režimu reverzní proxy, který předává veškeré požadavky na subdoménu
 \href{https://jobplanner.summerjob.eu}{jobplanner.summerjob.eu} na kontejner s aplikací. Reverzní proxy je spuštěna v kontejneru
 společně s nástrojem \texttt{certbot}, který zajišťuje automatické obnovování SSL certifikátů pro subdoménu
@@ -37,15 +37,15 @@ což snižuje zátěž serveru.
 
 Pro nasazení aplikace na produkční server byl využit nástroj \texttt{docker-compose}, který
 umožňuje spouštět a spravovat skupiny kontejnerů pomocí jednotného konfiguračního souboru.
-Konfigurace je zapsána v souboru \texttt{docker-compose.yaml}, který je součástí repozitáře aplikace.
+Konfigurace je zapsána v repozitáři aplikace v souboru \path{docker-compose.yaml}.
 Tento soubor obsahuje konfiguraci pro kontejnery s aplikací, databází a webovým serverem, kterou 
-je před spuštěním nutné upravit podle návodu, který je součástí repozitáře.
+je před spuštěním nutné upravit podle návodu, který je také součástí repozitáře.
 
 Jedná se zejména o nastavení databáze a přístupových údajů pro e-mailový účet, který je využíván
 pro odesílání přihlašovacích e-mailů. Celý proces včetně příkazů a popisu proměnných prostředí je popsán
-v repozitáři aplikace v souboru \texttt{README.md}.
+v repozitáři v souboru \texttt{README.md}.
 
-\section{Inicializace databáze}
+\subsection{Inicializace databáze}
 
 Po spuštění kontejnerů je nutné provést inicializaci databáze
 a vytvoření uživatelského účtu s administrátorskými právy. Pro tento účel jsou v servisním kontejneru připraveny skripty,
@@ -54,7 +54,7 @@ které interaktivně provedou uživatele prvním nastavením. Návod na spuště
 \section{Zálohování}
 
 K zálohování databáze je možné využít standardní nástroje pro zálohování databáze PostgreSQL.
-Vhodným řešením je například aplikace pgAdmin\footnote{\url{https://www.pgadmin.org/}}, kterou
+Vhodným řešením je například aplikace pgAdmin\footnote{pgAdmin, \url{https://www.pgadmin.org/}}, kterou
 je možné spustit v kontejneru propojeném se sítí databáze.
 Ve výchozím nastavení není databáze automaticky zálohována.
 

@@ -13,12 +13,12 @@ věnují implementaci Plánovače a kontejnerizaci.
 V této sekci jsou popsány možnosti rozšíření aplikace, které nebyly implementovány v rámci této práce. Některé z těchto možností jsou součástí původní aplikace,
 ale nebylo možné je implementovat v rámci této práce z důvodu časového omezení a nebyly zahrnuty v zadání.
 
-Mezi možnosti rozšíření patří například evidence typů prací. Tyto typy prací by mohly být využity pro lepší přehlednost a organizaci práce. Plánovací
-systém by následně mohl využívat tyto typy tak, aby nepřiřazoval brigádníky opakovaně na stejné práce. Tato funkcionalita by mohla být využita i pro
-vyhledávání brigádníků, kteří mají zkušenosti s určitými typy prací. Pracovníci by také mohli v profilu vyjádřit preference k určitým typům prací.
+Mezi možnosti rozšíření patří například evidence typů prací. Typy prací by mohly být využity pro lepší přehlednost a organizaci práce. Plánovací
+systém by následně mohl využívat typy prací tak, aby nepřiřazoval brigádníky opakovaně na stejné práce. Tato funkcionalita by mohla být využita i pro
+vyhledávání brigádníků, kteří mají s danou prací zkušenosti. Pracovníci by také mohli v profilu vyjádřit preference k určitým typům prací.
 
 Mezi další možnosti rozšíření patří evidence vybavení a nástrojů, které jsou potřebné pro vykonávání jednotlivých prací. Evidence by zaznamenávala
-počty potřebného vybavení a na práci a docházelo by k párování prací s pracanty, kteří mají dané nástroje k dispozici.
+počty potřebného vybavení na práci a docházelo by k párování prací s pracanty, kteří mají dané nástroje k dispozici.
 
 Další možností rozšíření je vytvoření systému pro zasílání upozornění. Tento systém by mohl být využit pro zasílání upozornění na nové práce, změny
 v plánu, změny v profilech pracantů, spuštění přihlašování a další. Hromadné zprávy by také mohly být využity administrátory pro zasílání zpráv všem
@@ -43,3 +43,8 @@ chybu bez otevření konzole neuvidí.
 
 Další nalezenou chybou je nesprávné odvození typů při použití Prisma Client v TypeScriptu. V některých případech, kdy jsou v dotazu zahrnuta dodatečná vrácená pole, nedojde
 k odvození typů těchto polí a pro další použití v kódu je nutné vrácenou hodnotu manuálně přetypovat. Chyba je v kódu označena komentářem \texttt{FIXME} s vysvětlením problému.
+
+\section{Zdrojový kód}
+
+Zdrojové kódy aplikace jsou zveřejněny na platformě GitHub na adrese \url{https://github.com/jesinmat/summerjob/}, jejich použití podléhá licenci této práce
+ a je tedy možné dílo užít libovolným způsobem, který nesnižuje hodnotu díla. Aplikace bude dostupná na webových stránkách organizace SummerJob.

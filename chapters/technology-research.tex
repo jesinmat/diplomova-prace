@@ -16,20 +16,25 @@ dynamických webových aplikací. Nabízí také možnost využití statického 
 
 Mezi nejoblíbenějšími technologiemi s více než 1 000 hlasy se umístily také nástroje Svelte, ASP.NET Core a Next.js. Všechny zmíněné technologie umožňují tvorbu dynamických webových aplikací,
 klientskou i serverovou část, nabízejí detailní dokumentaci a jsou aktivně vyvíjeny. Podporují také statické typování, částečné generování webových stránek na serveru (\textit{SSR} -- server side rendering),
-oddělené serverové částí s podporou přístupu k databázi i tvorbu API.
+serverový kód s podporou přístupu k databázi i tvorbu API.
 
-Pro implementaci byl zvolen framework Next.js ve verzi 13. Tento framework je postaven na React.js a rozšiřuje jej o další funkce, například tvorbu API nebo pokročilejší nastavení serveru \cite{nextjs}.
+Pro implementaci byl zvolen framework Next.js ve verzi 13. Tento framework využívá React.js pro tvorbu klientské webová aplikace a rozšiřuje jej o další funkce, například tvorbu API nebo pokročilejší nastavení serveru \cite{nextjs}.
 V době psaní práce podporuje React 18 SSR pouze v beta verzi, Next.js proto nabízí ve výchozím nastavení původní generování webových stránek u klienta.
-Během implementace však bude tato funkcionalita využita, protože přináší výhody v rychlosti načítání stránky, možnosti kešování a spouštění kódu na serveru.
+Během implementace však bude funkcionalita generování stránek na serveru využita, protože přináší výhody v rychlosti načítání stránky, možnosti kešování a spouštění kódu na serveru.
 
 Pro přístup k databázi byl zvolen nástroj Prisma. Prisma umožňuje definovat schéma databáze v jednoduché textové podobě a pomocí automatického generování
-příslušných typů pro TypeScript zajišťuje bezpečný přístup k databázi. Díky tomu je možné využít statické typování i při práci s databází a není možné vytvořit
-neplatný dotaz. Prisma také umožňuje tvorbu migrací, které zajišťují bezpečnou změnu schématu databáze. 
+příslušných typů pro TypeScript zajišťuje bezpečný přístup k databázi. Díky tomu je možné využít statické typování i při práci s databází, a to nejen 
+pro navrácené typy, ale i pro tvorbu dotazů. Prisma také umožňuje tvorbu migračních skriptů, které zajišťují bezpečnou změnu schématu databáze. 
+
+Pro zajištění správného zobrazení a funkcionality na mobilních zařízeních je nutné dodržovat principy responzivního designu. Pro zajištění kompatibility bude použit
+framework Bootstrap, který nabízí responzivní kaskádové styly pro komponenty. Pro grafické elementy bude využit 
+soubor ikon Font Awesome ve verzi 6.3, který nabízí širokou škálu ikon zdarma \cite{fontawesome}. Ikony jsou implementovány jako typ písma a klient tak nemusí stahovat jednotlivé obrázky.
+Tato volba má za cíl minimalizovat objem přenesených dat a sjednotit vzhled ikon napříč aplikací.
 
 \section{Plánovací systém}
 
 Plánovací systém bude vytvořen v jazyce TypeScript s využitím nástroje Prisma. To umožní minimalizovat počet použitých technologií napříč projektem,
-což zjednoduší jeho správu a údržbu. Vzhledem k počtu prací a brigádníků bude možné provést plánování do několika sekund, aby bylo zajištěno splnění požadavku na rychlost.
+což zjednoduší jeho správu a údržbu. Při implementaci bude nutné vybrat vhodný algoritmus, aby bylo zajištěno splnění požadavku na rychlost.
 Plánovač bude vytvořen jako samostatná komponenta, kterou bude možné v případě potřeby upravit přidáním vlastní implementace v jazyce TypeScript
 či zcela nahradit jinou implementací. 
 Pro přenos požadavků mezi webovým serverem a plánovacím systémem bude využita fronta zpráv.
@@ -41,7 +46,7 @@ a následně zpracovány. V případě chyby je možné zprávu zpracovat znovu.
 protože zajišťuje spolehlivý přenos zpráv v případě, že jedna ze služeb není v danou chvíli krátkodobě dostupná.
 
 Službou pro poskytování fronty zpráv byla zvolena technologie RabbitMQ. Jedná se o open-source nástroj, který je dostupný zdarma. RabbitMQ je běžně používaným řešením
-pro fronty zpráv. Využívá otevřený standard AMQP, jehož implementace je pro mnoho jazyků, včetně TypeScriptu, dostupná zdarma \cite{rabbitmq}.
+pro fronty zpráv \cite{rabbitmq} a využívá otevřený standard AMQP, jehož implementace je dostupná pro mnoho jazyků včetně TypeScriptu.
 
 Frontu zpráv je možné nahradit jinou implementací, která bude splňovat požadavky na přenos zpráv. Fronta slouží pouze jako prostředník pro přenos zpráv mezi webovou aplikací
 a plánovačem a nebude výrazně zatěžována, je tedy možné zvolit i jinou službu bez negativního dopadu na výkon systému.
@@ -51,14 +56,14 @@ a plánovačem a nebude výrazně zatěžována, je tedy možné zvolit i jinou 
 
 Pro výběr databáze byla na základě struktury dat zvolena technologie relačních databází. Uložená data mají pevně danou neměnnou strukturu,
 jedná se o krátké textové řetězce, čísla a datum. Výhodou relačních databází je možnost snadno definovat vztahy mezi jednotlivými tabulkami,
-což je v případě plánovacího systému nezbytné. Dále je výhodou možnost využití transakcí, které zajišťují konzistenci dat.
+což je v případě plánovacího systému nezbytné \cite{sql_nosql}. Dále je výhodou možnost využití transakcí, které zajišťují konzistenci dat.
 Na základě analýzy a interních zkušeností administrátorského týmu akce SummerJob byl zvolen databázový systém PostgreSQL. Tento systém je
 dostupný zdarma, má otevřený zdrojový kód a jedná se o běžně používané řešení s historií dlouhou více než 35 let \cite{postgresql}.
 Podle uživatelského průzkumu Stack Overflow se v minulém roce jednalo o nejoblíbenější a nejžádanější databázový systém \cite{so_dev_survey_db}.
 
 Objem dat a počet současných uživatelů systému je relativně malý, proto není nutné využívat technologie pro škálování databáze. Zálohování a obnova dat
 je možná přes externí nástroje, které jsou také dostupné zdarma. Jedná se například o aplikaci pgAdmin, která umožňuje správu databáze přes grafické rozhraní.
-Prisma poskytuje podporu pro PostgreSQL verze 9.4 a vyšší.
+Prisma podporuje PostgreSQL verze 9.4 a vyšší.
 
 \section{Kontejnerizace}
 
